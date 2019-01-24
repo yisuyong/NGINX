@@ -14,7 +14,6 @@ typedef struct {
     ngx_array_t                    caches;  /* ngx_http_file_cache_t * */
 } ngx_http_proxy_main_conf_t;
 
-
 typedef struct ngx_http_proxy_rewrite_s  ngx_http_proxy_rewrite_t;
 
 typedef ngx_int_t (*ngx_http_proxy_rewrite_pt)(ngx_http_request_t *r,
@@ -481,12 +480,19 @@ static ngx_command_t  ngx_http_proxy_commands[] = {
       offsetof(ngx_http_proxy_loc_conf_t, upstream.no_cache),
       NULL },
 
-    { ngx_string("proxy_cache_valid"),
+    { ngx_string("proxy_cache_valid"), // #jimmy-1-1
 //ori      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_1MORE,
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF|NGX_CONF_1MORE,
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF|NGX_CONF_1MORE,  //jimmy modified
       ngx_http_file_cache_valid_set_slot,
       NGX_HTTP_LOC_CONF_OFFSET,
       offsetof(ngx_http_proxy_loc_conf_t, upstream.cache_valid),
+      NULL },
+
+    { ngx_string("proxy_cache_valid_increase"), // #jimmy-1-2
+      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF|NGX_CONF_1MORE, 
+      ngx_http_file_cache_valid_increase_set_slot,
+      NGX_HTTP_LOC_CONF_OFFSET,
+      offsetof(ngx_http_proxy_loc_conf_t, upstream.cache_valid_increase),
       NULL },
 
     { ngx_string("proxy_cache_min_uses"),
@@ -727,7 +733,7 @@ static ngx_http_module_t  ngx_http_proxy_module_ctx = {
     ngx_http_proxy_add_variables,          /* preconfiguration */
     NULL,                                  /* postconfiguration */
 
-    ngx_http_proxy_create_main_conf,       /* create main configuration */
+    ngx_http_proxy_create_main_conf,       /* create main configuration */ 
     NULL,                                  /* init main configuration */
 
     NULL,                                  /* create server configuration */
@@ -859,6 +865,9 @@ ngx_http_proxy_handler(ngx_http_request_t *r)
     if (ctx == NULL) {
         return NGX_HTTP_INTERNAL_SERVER_ERROR;
     }
+
+
+ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "suyong test cacahe start ");
 
     ngx_http_set_ctx(r, ctx, ngx_http_proxy_module);
 
@@ -3091,7 +3100,6 @@ ngx_http_proxy_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     {
         return NGX_CONF_ERROR;
     }
-
 
 #if (NGX_HTTP_CACHE)
 

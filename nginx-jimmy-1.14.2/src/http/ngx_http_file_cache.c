@@ -279,6 +279,7 @@ ngx_http_file_cache_open(ngx_http_request_t *r)
     }
 
     if (c->reading) {
+   	 ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "suyong test cache 먼지 아직 모르겠음");
         return ngx_http_file_cache_read(r, c);
     }
 
@@ -386,12 +387,14 @@ ngx_http_file_cache_open(ngx_http_request_t *r)
     if (c->buf == NULL) {
         return NGX_ERROR;
     }
+    ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "suyong test cache 캐싱이 되어있는 상태");
 
     return ngx_http_file_cache_read(r, c);
 
 done:
 
     if (rv == NGX_DECLINED) {
+    ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "suyong test cache 디스크에 파일이 없는상태");
         return ngx_http_file_cache_lock(r, c);
     }
 
@@ -601,7 +604,11 @@ ngx_http_file_cache_read(ngx_http_request_t *r, ngx_http_cache_t *c)
 
     c->buf->last += n;
 
+        ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                       "suyong test cache http file cache 2 berfor lock_age : %i vaild_time : %T",c->lock_age, c->valid_sec);
     c->valid_sec = h->valid_sec;
+        ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                       "suyong test cache http file cache 3 after lock_age : %i vaild_time : %T",c->lock_age, c->valid_sec);
     c->updating_sec = h->updating_sec;
     c->error_sec = h->error_sec;
     c->last_modified = h->last_modified;
@@ -648,6 +655,9 @@ ngx_http_file_cache_read(ngx_http_request_t *r, ngx_http_cache_t *c)
             c->updating = 1;
             c->lock_time = c->node->lock_time;
             rc = NGX_HTTP_CACHE_STALE;
+        ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                       "suyong test cache http file cache expired: %i valid_sec : %T, lock_age : %i, Lock_time : %T",
+                       rc, c->valid_sec,c->lock_age,c->lock_time);
         }
 
         ngx_shmtx_unlock(&cache->shpool->mutex);
@@ -2614,7 +2624,7 @@ ngx_http_file_cache_set_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
 
 char *
 ngx_http_file_cache_valid_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
-    void *conf)
+    void *conf) 
 {
     char  *p = conf;
 
@@ -2633,6 +2643,7 @@ ngx_http_file_cache_valid_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
             return NGX_CONF_ERROR;
         }
     }
+
 
     value = cf->args->elts;
     n = cf->args->nelts - 1;
@@ -2686,3 +2697,11 @@ ngx_http_file_cache_valid_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
 
     return NGX_CONF_OK;
 }
+
+
+char * ngx_http_file_cache_valid_increase_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,void *conf) // #jimmy-1-5
+{
+    return NGX_CONF_OK;
+}
+
+

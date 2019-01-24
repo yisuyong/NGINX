@@ -924,8 +924,9 @@ ngx_http_upstream_cache(ngx_http_request_t *r, ngx_http_upstream_t *u)
 
         return NGX_OK;
 
-    case NGX_HTTP_CACHE_STALE:
-
+    case NGX_HTTP_CACHE_STALE: // #jimmy-1-99
+//        c->valid_sec = c->valid_sec + 120;
+//    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong !!!!!: %T", c->valid_sec);
         c->valid_sec = 0;
         c->updating_sec = 0;
         c->error_sec = 0;

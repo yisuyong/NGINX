@@ -70,7 +70,7 @@ struct ngx_http_cache_s {
     u_char                           main[NGX_HTTP_CACHE_KEY_LEN];
 
     ngx_file_uniq_t                  uniq;
-    time_t                           valid_sec;
+    time_t                           valid_sec; // 원본으로부터 갱신된 시간
     time_t                           updating_sec;
     time_t                           error_sec;
     time_t                           last_modified;
@@ -100,7 +100,7 @@ struct ngx_http_cache_s {
 #endif
 
     ngx_msec_t                       lock_timeout;
-    ngx_msec_t                       lock_age;
+    ngx_msec_t                       lock_age; 
     ngx_msec_t                       lock_time;
     ngx_msec_t                       wait_time;
 
@@ -200,6 +200,7 @@ char *ngx_http_file_cache_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
 char *ngx_http_file_cache_valid_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
 
+char *ngx_http_file_cache_valid_increase_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,void *conf); // #jimmy-1-4
 
 extern ngx_str_t  ngx_http_cache_status[];
 
