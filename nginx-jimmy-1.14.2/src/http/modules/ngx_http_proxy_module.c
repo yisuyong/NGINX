@@ -1812,6 +1812,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
     ngx_http_upstream_header_t     *hh;
     ngx_http_upstream_main_conf_t  *umcf;
     time_t              valid,now=ngx_time();//#jimmy-2-4
+    time_t		aging=0;
 
 
     umcf = ngx_http_get_module_main_conf(r, ngx_http_upstream_module);
@@ -1872,20 +1873,16 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             continue;
         }
 
-//#jimmy-2-5 start
+#if (NGX_HTTP_CACHE) //#jimmy-2-5
 	valid=ngx_http_file_cache_valid(r->upstream->conf->cache_valid,r->upstream->headers_in.status_n);
         if(valid && r->cache->valid_sec)
         {
-                r->cache->c_aging=valid + now - r->cache->valid_sec;
-        }
-        else
-        {
-                r->cache->c_aging=0;
+                aging=valid + now - r->cache->valid_sec;
         }
         ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                "suyong cache max-age (src/http/ngx_http_upstream.c) max-age : %i = %i + %i - %i",
-		r->cache->c_aging,valid,now,r->cache->valid_sec);
-//#jimmy-2-5 end
+                "suyong cache x-aging (src/http/ngx_http_upstream.c) x-aging : %i = %i + %i - %i",
+		aging,valid,now,r->cache->valid_sec);
+#endif
 
 
         if (rc == NGX_HTTP_PARSE_HEADER_DONE) {
@@ -1943,7 +1940,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             ctx = ngx_http_get_module_ctx(r, ngx_http_proxy_module);
 
 #if (NGX_HTTP_CACHE)
-		ctx->aging=r->cache->c_aging;
+		ctx->aging=aging;
 #endif
 
             if (u->headers_in.status_n == NGX_HTTP_NO_CONTENT

@@ -884,8 +884,6 @@ ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong test 캐시파�
     }
 
 
-    c->c_aging = 0; //#jimmy-2-1
-
     rc = ngx_http_file_cache_open(r);
 
 
