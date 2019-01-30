@@ -432,6 +432,7 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
 
     now = ngx_time();
 
+
     if (expires == NGX_HTTP_EXPIRES_DAILY) {
         expires_time = ngx_next_time(expires_time);
         max_age = expires_time - now;
@@ -449,10 +450,16 @@ ngx_http_set_expires(ngx_http_request_t *r, ngx_http_headers_conf_t *conf)
 
     ngx_http_time(e->value.data, expires_time);
 
+
+ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                "suyong 클라이언트 해더 생성시 여기부먼 만들어짐(./src/http/modules/ngx_http_headers_filter_module.c) max-age(valid+now-valid_sec)");
+
+
     if (conf->expires_time < 0 || max_age < 0) {
         ngx_str_set(&cc->value, "no-cache");
         return NGX_OK;
     }
+
 
     cc->value.data = ngx_pnalloc(r->pool,
                                  sizeof("max-age=") + NGX_TIME_T_LEN + 1);

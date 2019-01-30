@@ -76,6 +76,9 @@ struct ngx_http_cache_s {
     time_t                           last_modified;
     time_t                           date;
 
+    ngx_uint_t			     c_aging; //#jimmy-2-3
+
+
     ngx_str_t                        etag;
     ngx_str_t                        vary;
     u_char                           variant[NGX_HTTP_CACHE_KEY_LEN];
@@ -200,7 +203,6 @@ char *ngx_http_file_cache_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
 char *ngx_http_file_cache_valid_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
 
-char *ngx_http_file_cache_valid_increase_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,void *conf); // #jimmy-1-4
 
 extern ngx_str_t  ngx_http_cache_status[];
 

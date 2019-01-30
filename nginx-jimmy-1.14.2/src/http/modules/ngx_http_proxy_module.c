@@ -115,6 +115,7 @@ typedef struct {
     unsigned                       head:1;
     unsigned                       internal_chunked:1;
     unsigned                       header_sent:1;
+    time_t                         aging; //#jimmy-2-2
 } ngx_http_proxy_ctx_t;
 
 
@@ -148,11 +149,18 @@ static ngx_int_t ngx_http_proxy_port_variable(ngx_http_request_t *r,
 static ngx_int_t
     ngx_http_proxy_add_x_forwarded_for_variable(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data);
+
 static ngx_int_t
     ngx_http_proxy_internal_body_length_variable(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data);
 static ngx_int_t ngx_http_proxy_internal_chunked_variable(ngx_http_request_t *r,
     ngx_http_variable_value_t *v, uintptr_t data);
+
+#if (NGX_HTTP_CACHE) //#jimmy-2-8
+static ngx_int_t ngx_http_proxy_x_aging_variable(ngx_http_request_t *r,ngx_http_variable_value_t *v, uintptr_t data);
+#endif
+
+
 static ngx_int_t ngx_http_proxy_rewrite_redirect(ngx_http_request_t *r,
     ngx_table_elt_t *h, size_t prefix);
 static ngx_int_t ngx_http_proxy_rewrite_cookie(ngx_http_request_t *r,
@@ -488,13 +496,6 @@ static ngx_command_t  ngx_http_proxy_commands[] = {
       offsetof(ngx_http_proxy_loc_conf_t, upstream.cache_valid),
       NULL },
 
-    { ngx_string("proxy_cache_valid_increase"), // #jimmy-1-2
-      NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF|NGX_CONF_1MORE, 
-      ngx_http_file_cache_valid_increase_set_slot,
-      NGX_HTTP_LOC_CONF_OFFSET,
-      offsetof(ngx_http_proxy_loc_conf_t, upstream.cache_valid_increase),
-      NULL },
-
     { ngx_string("proxy_cache_min_uses"),
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
       ngx_conf_set_num_slot,
@@ -808,6 +809,7 @@ static ngx_keyval_t  ngx_http_proxy_cache_headers[] = {
     { ngx_string("If-Match"), ngx_string("") },
     { ngx_string("Range"), ngx_string("") },
     { ngx_string("If-Range"), ngx_string("") },
+    { ngx_string("Cache-aging"), ngx_string("$proxy_x_aging") }, //#jimmy-2-6
     { ngx_null_string, ngx_null_string }
 };
 
@@ -837,6 +839,11 @@ static ngx_http_variable_t  ngx_http_proxy_vars[] = {
       ngx_http_proxy_internal_chunked_variable, 0,
       NGX_HTTP_VAR_NOCACHEABLE|NGX_HTTP_VAR_NOHASH, 0 },
 
+#if (NGX_HTTP_CACHE) //#jimmy-2-7
+    { ngx_string("proxy_x_aging"), NULL,
+      ngx_http_proxy_x_aging_variable, 0,
+      NGX_HTTP_VAR_CHANGEABLE|NGX_HTTP_VAR_NOCACHEABLE|NGX_HTTP_VAR_NOHASH, 0 },
+#endif
       ngx_http_null_variable
 };
 
@@ -1804,6 +1811,8 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
     ngx_http_proxy_ctx_t           *ctx;
     ngx_http_upstream_header_t     *hh;
     ngx_http_upstream_main_conf_t  *umcf;
+    time_t              valid,now=ngx_time();//#jimmy-2-4
+
 
     umcf = ngx_http_get_module_main_conf(r, ngx_http_upstream_module);
 
@@ -1816,9 +1825,11 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
             /* a header line has been parsed successfully */
 
             h = ngx_list_push(&r->upstream->headers_in.headers);
+
             if (h == NULL) {
                 return NGX_ERROR;
             }
+
 
             h->hash = r->header_hash;
 
@@ -1860,6 +1871,22 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
 
             continue;
         }
+
+//#jimmy-2-5 start
+	valid=ngx_http_file_cache_valid(r->upstream->conf->cache_valid,r->upstream->headers_in.status_n);
+        if(valid && r->cache->valid_sec)
+        {
+                r->cache->c_aging=valid + now - r->cache->valid_sec;
+        }
+        else
+        {
+                r->cache->c_aging=0;
+        }
+        ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                "suyong cache max-age (src/http/ngx_http_upstream.c) max-age : %i = %i + %i - %i",
+		r->cache->c_aging,valid,now,r->cache->valid_sec);
+//#jimmy-2-5 end
+
 
         if (rc == NGX_HTTP_PARSE_HEADER_DONE) {
 
@@ -1914,6 +1941,10 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
              */
 
             ctx = ngx_http_get_module_ctx(r, ngx_http_proxy_module);
+
+#if (NGX_HTTP_CACHE)
+		ctx->aging=r->cache->c_aging;
+#endif
 
             if (u->headers_in.status_n == NGX_HTTP_NO_CONTENT
                 || u->headers_in.status_n == NGX_HTTP_NOT_MODIFIED
@@ -2479,6 +2510,29 @@ ngx_http_proxy_internal_body_length_variable(ngx_http_request_t *r,
     return NGX_OK;
 }
 
+#if (NGX_HTTP_CACHE) //#jimmy-2-9
+static ngx_int_t 
+ngx_http_proxy_x_aging_variable(ngx_http_request_t *r,ngx_http_variable_value_t *v, uintptr_t data)
+{
+    
+    ngx_http_proxy_ctx_t  *ctx;
+    ctx = ngx_http_get_module_ctx(r, ngx_http_proxy_module);
+
+    if (ctx == NULL) {
+        v->not_found = 1;
+        return NGX_OK;
+    }
+    v->valid = 1;
+    v->no_cacheable = 0;
+    v->not_found = 0;
+
+    v->data = ngx_pnalloc(r->pool, NGX_OFF_T_LEN);
+
+    ngx_sprintf(v->data, "%i", ctx->aging);
+    v->len = ngx_sprintf(v->data, "%i", ctx->aging) - v->data;
+    return NGX_OK;
+}
+#endif
 
 static ngx_int_t
 ngx_http_proxy_internal_chunked_variable(ngx_http_request_t *r,
@@ -2863,7 +2917,7 @@ ngx_http_proxy_create_loc_conf(ngx_conf_t *cf)
 
 #if (NGX_HTTP_CACHE)
     conf->upstream.cache = NGX_CONF_UNSET;
-    conf->upstream.cache_min_uses = NGX_CONF_UNSET_UINT;
+    conf->upstream.cache_min_uses = NGX_CONF_UNSET_UINT; 
     conf->upstream.cache_max_range_offset = NGX_CONF_UNSET;
     conf->upstream.cache_bypass = NGX_CONF_UNSET_PTR;
     conf->upstream.no_cache = NGX_CONF_UNSET_PTR;

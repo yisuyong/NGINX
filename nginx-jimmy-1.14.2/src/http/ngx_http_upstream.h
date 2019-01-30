@@ -208,7 +208,6 @@ typedef struct {
     ngx_flag_t                       cache_background_update;
 
     ngx_array_t                     *cache_valid;
-    ngx_array_t                     *cache_valid_increase; // #jimmy-1-3
     ngx_array_t                     *cache_bypass;
     ngx_array_t                     *cache_purge;
     ngx_array_t                     *no_cache;

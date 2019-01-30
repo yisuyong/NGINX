@@ -3669,7 +3669,7 @@ lock	src/core/ngx_slab.h	/^    ngx_shmtx_sh_t    lock;$/;"	m	struct:__anon491
 lock	src/http/ngx_http_cache.h	/^    unsigned                         lock:1;$/;"	m	struct:ngx_http_cache_s
 lock	src/http/ngx_http_upstream_round_robin.h	/^    ngx_atomic_t                    lock;$/;"	m	struct:ngx_http_upstream_rr_peer_s
 lock	src/stream/ngx_stream_upstream_round_robin.h	/^    ngx_atomic_t                     lock;$/;"	m	struct:ngx_stream_upstream_rr_peer_s
-lock_age	src/http/ngx_http_cache.h	/^    ngx_msec_t                       lock_age;$/;"	m	struct:ngx_http_cache_s
+lock_age	src/http/ngx_http_cache.h	/^    ngx_msec_t                       lock_age; $/;"	m	struct:ngx_http_cache_s
 lock_file	src/core/ngx_cycle.h	/^    ngx_str_t                 lock_file;$/;"	m	struct:__anon494
 lock_file	src/core/ngx_cycle.h	/^    ngx_str_t                 lock_file;$/;"	m	struct:ngx_cycle_s
 lock_time	src/http/ngx_http_cache.h	/^    ngx_msec_t                       lock_time;$/;"	m	struct:__anon93
@@ -3781,6 +3781,7 @@ matrix	src/http/modules/ngx_http_mp4_module.c	/^    u_char    matrix[36];$/;"	m	
 matrix	src/http/modules/ngx_http_mp4_module.c	/^    u_char    matrix[36];$/;"	m	struct:__anon195	file:
 max	src/core/ngx_open_file_cache.h	/^    ngx_uint_t               max;$/;"	m	struct:__anon524
 max	src/core/ngx_palloc.h	/^    size_t                max;$/;"	m	struct:ngx_pool_s
+max_age	src/http/ngx_http_cache.h	/^    ngx_uint_t			     max_age; \/\/#jimmy-2-3$/;"	m	struct:ngx_http_cache_s
 max_buffer_size	src/http/modules/ngx_http_mp4_module.c	/^    size_t                max_buffer_size;$/;"	m	struct:__anon185	file:
 max_cached	src/http/modules/ngx_http_upstream_keepalive_module.c	/^    ngx_uint_t                         max_cached;$/;"	m	struct:__anon253	file:
 max_changes	src/event/modules/ngx_devpoll_module.c	/^static ngx_uint_t       nchanges, max_changes, nevents;$/;"	v	file:
@@ -10843,9 +10844,9 @@ valid_location	src/http/ngx_http_request.h	/^    unsigned                       
 valid_msec	src/http/ngx_http_cache.h	/^    ngx_uint_t                       valid_msec;$/;"	m	struct:ngx_http_cache_s
 valid_msec	src/http/ngx_http_cache.h	/^    u_short                          valid_msec;$/;"	m	struct:__anon94
 valid_msec	src/http/ngx_http_cache.h	/^    unsigned                         valid_msec:10;$/;"	m	struct:__anon93
+valid_sec	src/http/ngx_http_cache.h	/^    time_t                           valid_sec; \/\/ 원본으로부터 갱신된 시간$/;"	m	struct:ngx_http_cache_s
 valid_sec	src/http/ngx_http_cache.h	/^    time_t                           valid_sec;$/;"	m	struct:__anon93
 valid_sec	src/http/ngx_http_cache.h	/^    time_t                           valid_sec;$/;"	m	struct:__anon94
-valid_sec	src/http/ngx_http_cache.h	/^    time_t                           valid_sec;$/;"	m	struct:ngx_http_cache_s
 valid_unparsed_uri	src/http/ngx_http_request.h	/^    unsigned                          valid_unparsed_uri:1;$/;"	m	struct:ngx_http_request_s
 value	custom_modules/bak/nginx-module-vts/src/ngx_http_vhost_traffic_status_set.h	/^    ngx_http_complex_value_t   value;$/;"	m	struct:__anon57
 value	custom_modules/nginx-module-vts/src/ngx_http_vhost_traffic_status_set.h	/^    ngx_http_complex_value_t   value;$/;"	m	struct:__anon14

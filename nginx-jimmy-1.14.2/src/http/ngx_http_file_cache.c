@@ -394,7 +394,7 @@ ngx_http_file_cache_open(ngx_http_request_t *r)
 done:
 
     if (rv == NGX_DECLINED) {
-    ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "suyong test cache 디스크에 파일이 없는상태");
+    ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0, "suyong test cache 디스크에 파일이 없는상태 캐시 파일 생성");
         return ngx_http_file_cache_lock(r, c);
     }
 
@@ -604,11 +604,8 @@ ngx_http_file_cache_read(ngx_http_request_t *r, ngx_http_cache_t *c)
 
     c->buf->last += n;
 
-        ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "suyong test cache http file cache 2 berfor lock_age : %i vaild_time : %T",c->lock_age, c->valid_sec);
     c->valid_sec = h->valid_sec;
-        ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                       "suyong test cache http file cache 3 after lock_age : %i vaild_time : %T",c->lock_age, c->valid_sec);
+
     c->updating_sec = h->updating_sec;
     c->error_sec = h->error_sec;
     c->last_modified = h->last_modified;
@@ -617,6 +614,12 @@ ngx_http_file_cache_read(ngx_http_request_t *r, ngx_http_cache_t *c)
     c->body_start = h->body_start;
     c->etag.len = h->etag_len;
     c->etag.data = h->etag;
+
+
+    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+       "suyong (./src/http/ngx_http_file_cache.c) old_valid_sec : %T",
+                       c->valid_sec);
+   
 
     r->cached = 1;
 
@@ -2590,6 +2593,7 @@ ngx_http_file_cache_set_slot(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     }
 
     cache->shm_zone = ngx_shared_memory_add(cf, &name, size, cmd->post);
+
     if (cache->shm_zone == NULL) {
         return NGX_CONF_ERROR;
     }
@@ -2698,10 +2702,5 @@ ngx_http_file_cache_valid_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,
     return NGX_CONF_OK;
 }
 
-
-char * ngx_http_file_cache_valid_increase_set_slot(ngx_conf_t *cf, ngx_command_t *cmd,void *conf) // #jimmy-1-5
-{
-    return NGX_CONF_OK;
-}
 
 

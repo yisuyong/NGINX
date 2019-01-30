@@ -811,9 +811,12 @@ ngx_http_upstream_cache(ngx_http_request_t *r, ngx_http_upstream_t *u)
     ngx_http_cache_t       *c;
     ngx_http_file_cache_t  *cache;
 
+
     c = r->cache;
 
+    
     if (c == NULL) {
+ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong test 캐시파일이 항상 널..");
 
         if (!(r->method & u->conf->cache_methods)) {
             return NGX_DECLINED;
@@ -880,7 +883,11 @@ ngx_http_upstream_cache(ngx_http_request_t *r, ngx_http_upstream_t *u)
         u->cache_status = NGX_HTTP_CACHE_MISS;
     }
 
+
+    c->c_aging = 0; //#jimmy-2-1
+
     rc = ngx_http_file_cache_open(r);
+
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "http upstream cache: %i", rc);
@@ -916,6 +923,7 @@ ngx_http_upstream_cache(ngx_http_request_t *r, ngx_http_upstream_t *u)
 
     case NGX_OK:
         u->cache_status = NGX_HTTP_CACHE_HIT;
+
     }
 
     switch (rc) {
@@ -924,15 +932,15 @@ ngx_http_upstream_cache(ngx_http_request_t *r, ngx_http_upstream_t *u)
 
         return NGX_OK;
 
-    case NGX_HTTP_CACHE_STALE: // #jimmy-1-99
-//        c->valid_sec = c->valid_sec + 120;
-//    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong !!!!!: %T", c->valid_sec);
+    case NGX_HTTP_CACHE_STALE: 
         c->valid_sec = 0;
         c->updating_sec = 0;
         c->error_sec = 0;
 
         u->buffer.start = NULL;
         u->cache_status = NGX_HTTP_CACHE_EXPIRED;
+//ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong test cache expire / revalid_count count current  %i / %i\n",u->cache_expire_count,c->revalid_count);
+//ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong test cache expire / revalid_count count +1 add  %i / %i\n",u->cache_expire_count,c->revalid_count);
 
         break;
 
@@ -2477,7 +2485,7 @@ ngx_http_upstream_test_next(ngx_http_request_t *r, ngx_http_upstream_t *u)
     if (status == NGX_HTTP_NOT_MODIFIED
         && u->cache_status == NGX_HTTP_CACHE_EXPIRED
         && u->conf->cache_revalidate)
-    {
+    {    
         time_t     now, valid, updating, error;
         ngx_int_t  rc;
 
@@ -2514,7 +2522,7 @@ ngx_http_upstream_test_next(ngx_http_request_t *r, ngx_http_upstream_t *u)
             error = r->cache->error_sec;
         }
 
-        if (valid == 0) {
+        if (valid == 0) { 
             valid = ngx_http_file_cache_valid(u->conf->cache_valid,
                                               u->headers_in.status_n);
             if (valid) {
@@ -3037,7 +3045,9 @@ ngx_http_upstream_send_response(ngx_http_request_t *r, ngx_http_upstream_t *u)
 
         if (valid) {
             r->cache->date = now;
+
             r->cache->body_start = (u_short) (u->buffer.pos - u->buffer.start);
+
 
             if (u->headers_in.status_n == NGX_HTTP_OK
                 || u->headers_in.status_n == NGX_HTTP_PARTIAL_CONTENT)
