@@ -18,6 +18,8 @@ typedef struct ngx_http_log_div_var_s ngx_http_log_div_var_t;
 
 typedef struct ngx_http_log_op_s  ngx_http_log_op_t;
 
+
+//typedef suyong 참고
 typedef u_char *(*ngx_http_log_op_run_pt) (ngx_http_request_t *r, u_char *buf,
 		ngx_http_log_op_t *op,ngx_http_log_div_var_t *div_var_t);
 

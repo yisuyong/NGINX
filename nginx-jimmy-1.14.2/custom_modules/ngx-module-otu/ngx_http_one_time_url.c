@@ -1,32 +1,4 @@
-#include <nginx.h>
-#include <ngx_config.h>
-#include <ngx_core.h>
-#include <ngx_http.h>
-
-/*
-http {
-  server{
-          otu_version 1; //version name
-          otu_key "1234567890abcdfe";
-          otu_iv "efdca0987654321";
-          otu_bypass="*.ts";
-  }
-}
-*/
-
-typedef struct {
-  ngx_uint_t version;
-  ngx_str_t key;
-  ngx_str_t iv;
-  ngx_str_t bypass;
-} ngx_http_one_time_url_loc_conf_t;
-
-
-static ngx_int_t ngx_http_one_time_url_init(ngx_conf_t *cf);
-static void *ngx_http_one_time_url_create_loc_conf(ngx_conf_t *cf);
-static char *ngx_http_one_time_url_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child);
-static ngx_int_t ngx_http_one_time_url_handler(ngx_http_request_t *r);
-
+#include "ngx_http_one_time_url.h"
 
 static ngx_command_t  ngx_http_one_time_url_commands[] = {
 
@@ -99,11 +71,7 @@ static ngx_int_t ngx_http_one_time_url_handler(ngx_http_request_t *r)
 
    olcf=ngx_http_get_module_loc_conf(r,ngx_http_one_time_url_module);
 
-
-    ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s, uri : %s",
-                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,r->uri.data);
-
+   olcf->run(r,olcf);
    //return NGX_DECLINED;
    return NGX_OK;
 
@@ -140,6 +108,15 @@ static char *ngx_http_one_time_url_merge_loc_conf(ngx_conf_t *cf, void *parent, 
 	ngx_conf_merge_str_value(conf->iv, prev->iv, "efdca0987654321");
 	ngx_conf_merge_str_value(conf->bypass, prev->bypass, "*.ts");
 
+	if(conf->version ==1)
+	{
+		conf->run=otu_run_version1;
+        }
+	else
+	{
+		conf->run=otu_run_version2;
+	}
+
 	return NGX_CONF_OK;
     }
    else
@@ -169,3 +146,31 @@ static ngx_int_t ngx_http_one_time_url_init(ngx_conf_t *cf)
 
   return NGX_OK;
 }
+
+
+
+static ngx_int_t *otu_run_version1(ngx_http_request_t *r,void *conf)
+{
+        ngx_http_one_time_url_loc_conf_t *olcf;
+
+        olcf=(ngx_http_one_time_url_loc_conf_t *) conf;
+
+    ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s, uri : %s",
+                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,r->uri.data);
+	return NGX_OK;
+}
+
+
+static ngx_int_t *otu_run_version2(ngx_http_request_t *r,void *conf)
+{
+        ngx_http_one_time_url_loc_conf_t *olcf;
+
+        olcf=(ngx_http_one_time_url_loc_conf_t *) conf;
+
+    ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s, uri : %s",
+                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,r->uri.data);
+	return NGX_OK;
+}
+
