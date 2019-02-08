@@ -185,7 +185,7 @@ cc -g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate
 ----------------------------------------
 checking for crypt()
 
-/tmp/ccKcNyeC.o: In function `main':
+/tmp/cc1oo8gt.o: In function `main':
 /root/nginx/nginx-jimmy-1.14.2/objs/autotest.c:7: undefined reference to `crypt'
 collect2: error: ld returned 1 exit status
 ----------
@@ -300,7 +300,7 @@ checking for statvfs()
 ----------------------------------------
 checking for dlopen()
 
-/tmp/ccHVYOxd.o: In function `main':
+/tmp/cc3eehQh.o: In function `main':
 /root/nginx/nginx-jimmy-1.14.2/objs/autotest.c:7: undefined reference to `dlopen'
 /root/nginx/nginx-jimmy-1.14.2/objs/autotest.c:7: undefined reference to `dlsym'
 collect2: error: ld returned 1 exit status
@@ -628,7 +628,7 @@ objs/autotest.c:7:5: warning: implicit declaration of function 'setproctitle'; d
      setproctitle("test");;
      ^~~~~~~~~~~~
      setstate
-/tmp/ccCLZvVO.o: In function `main':
+/tmp/ccf20nGI.o: In function `main':
 /root/nginx/nginx-jimmy-1.14.2/objs/autotest.c:7: undefined reference to `setproctitle'
 collect2: error: ld returned 1 exit status
 ----------
@@ -661,7 +661,7 @@ checking for pwritev()
 ----------------------------------------
 checking for sys_nerr
 
-/tmp/ccUm3LDi.o: In function `printf':
+/tmp/ccF5LsT7.o: In function `printf':
 /usr/include/x86_64-linux-gnu/bits/stdio2.h:104: warning: `sys_nerr' is deprecated; use `strerror' or `strerror_r' instead
 135
 ----------------------------------------
@@ -695,7 +695,7 @@ checking for System V shared memory
 ----------------------------------------
 checking for POSIX semaphores
 
-/tmp/cclTkZV1.o: In function `main':
+/tmp/ccolfXUU.o: In function `main':
 /root/nginx/nginx-jimmy-1.14.2/objs/autotest.c:8: undefined reference to `sem_init'
 /root/nginx/nginx-jimmy-1.14.2/objs/autotest.c:9: undefined reference to `sem_destroy'
 collect2: error: ld returned 1 exit status

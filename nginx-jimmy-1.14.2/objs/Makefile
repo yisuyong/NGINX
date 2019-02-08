@@ -333,6 +333,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/addon/src/ngx_http_vhost_traffic_status_display_prometheus.o \
 	objs/addon/src/ngx_http_vhost_traffic_status_set.o \
 	objs/addon/src/ngx_http_vhost_traffic_status_dump.o \
+	objs/addon/ngx-module-otu/ngx_http_one_time_url.o \
 	objs/ngx_modules.o
 
 	$(LINK) -o objs/nginx \
@@ -530,6 +531,7 @@ objs/nginx:	objs/src/core/nginx.o \
 	objs/addon/src/ngx_http_vhost_traffic_status_display_prometheus.o \
 	objs/addon/src/ngx_http_vhost_traffic_status_set.o \
 	objs/addon/src/ngx_http_vhost_traffic_status_dump.o \
+	objs/addon/ngx-module-otu/ngx_http_one_time_url.o \
 	objs/ngx_modules.o \
 	-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now -ldl -lpthread -lpthread -lcrypt -lpcre -lssl -lcrypto -ldl -lpthread -lz -lxml2 -lxslt -lexslt -lgd -lGeoIP \
 	-Wl,-E
@@ -1901,6 +1903,13 @@ objs/addon/src/ngx_http_vhost_traffic_status_dump.o:	$(ADDON_DEPS) \
 	$(CC) -c $(CFLAGS)  $(ALL_INCS) \
 		-o objs/addon/src/ngx_http_vhost_traffic_status_dump.o \
 		/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/nginx-module-vts/src/ngx_http_vhost_traffic_status_dump.c
+
+
+objs/addon/ngx-module-otu/ngx_http_one_time_url.o:	$(ADDON_DEPS) \
+	/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx-module-otu/ngx_http_one_time_url.c
+	$(CC) -c $(CFLAGS)  $(ALL_INCS) \
+		-o objs/addon/ngx-module-otu/ngx_http_one_time_url.o \
+		/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx-module-otu/ngx_http_one_time_url.c
 
 
 manpage:	objs/nginx.8

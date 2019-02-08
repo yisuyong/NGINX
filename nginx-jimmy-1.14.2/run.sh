@@ -19,4 +19,5 @@ DIR="/usr/share/nginx2"
  --with-mail --with-mail_ssl_module --with-threads --with-compat \
  --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx_cache_purge \
  --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/nginx-module-vts \
+ --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx-module-otu \
  --with-debug 

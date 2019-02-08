@@ -874,7 +874,7 @@ ngx_http_proxy_handler(ngx_http_request_t *r)
     }
 
 
-ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "suyong test cacahe start ");
+ngx_log_error(NGX_LOG_ERR, r->connection->log, 0, "suyong cacahe start (./src/http/modules/ngx_http_proxy_module.c) ");
 
     ngx_http_set_ctx(r, ctx, ngx_http_proxy_module);
 
@@ -1880,7 +1880,7 @@ ngx_http_proxy_process_header(ngx_http_request_t *r)
                 aging=valid + now - r->cache->valid_sec;
         }
         ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                "suyong cache x-aging (src/http/ngx_http_upstream.c) x-aging : %i = %i + %i - %i",
+                "suyong cache x-aging : %i = %i + %i - %i  (./src/http/modules/ngx_http_proxy_module.c)",
 		aging,valid,now,r->cache->valid_sec);
 #endif
 

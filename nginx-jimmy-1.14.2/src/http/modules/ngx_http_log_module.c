@@ -25,7 +25,7 @@ typedef size_t (*ngx_http_log_op_getlen_pt) (ngx_http_request_t *r,
     uintptr_t data);
 
 
-typedef struct {
+typedef struct { //#jimmy-4-4
     ngx_uint_t	sectime;
 }ngx_http_log_division_conf_t;
 
@@ -87,7 +87,7 @@ typedef struct {
     ngx_uint_t                  open_file_cache_min_uses;
 
     ngx_uint_t                  off;        /* unsigned  off:1 */
-    ngx_http_log_division_conf_t *div;
+    ngx_http_log_division_conf_t *div; //#jimmy-4-5
 
 } ngx_http_log_loc_conf_t;
 
@@ -137,6 +137,8 @@ static u_char *ngx_http_log_pipe(ngx_http_request_t *r, u_char *buf,
 static u_char *ngx_http_log_time(ngx_http_request_t *r, u_char *buf,
     ngx_http_log_op_t *op,ngx_http_log_div_var_t *div_var_t);
 
+
+//#jimmy-3-2
 static u_char *ngx_http_log_time_korean(ngx_http_request_t *r, u_char *buf,
     ngx_http_log_op_t *op,ngx_http_log_div_var_t *div_var_t);
 
@@ -190,7 +192,7 @@ static char *ngx_http_log_open_file_cache(ngx_conf_t *cf, ngx_command_t *cmd,
     void *conf);
 static ngx_int_t ngx_http_log_init(ngx_conf_t *cf);
 
-static char *ngx_http_log_division_set(ngx_conf_t *cf, ngx_command_t *cmd, void *conf);
+static char *ngx_http_log_division_set(ngx_conf_t *cf, ngx_command_t *cmd, void *conf); //#jimmy-4-2
 
 static ngx_tm_t ngx_http_log_div_time_renew(ngx_http_log_div_var_t *div_var_t);
 
@@ -198,7 +200,7 @@ static char  *months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
                            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
 static ngx_command_t  ngx_http_log_commands[] = {
-    { ngx_string("access_log_division_time"),
+    { ngx_string("access_log_division_time"), //#jimmy-4-1
       NGX_HTTP_MAIN_CONF|NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_HTTP_LIF_CONF
                         |NGX_HTTP_LMT_CONF|NGX_CONF_TAKE1,
       ngx_http_log_division_set,
@@ -278,7 +280,7 @@ static ngx_http_log_var_t  ngx_http_log_vars[] = {
                           ngx_http_log_time },
     { ngx_string("time_iso8601"), sizeof("1970-09-28T12:00:00+06:00") - 1,
                           ngx_http_log_iso8601 },
-    { ngx_string("time_local_korean"), sizeof("1970-09-28 12:00:00") - 1,
+    { ngx_string("time_local2"), sizeof("1970-09-28 12:00:00") - 1, //#jimmy-3-1
                           ngx_http_log_time_korean },
     { ngx_string("msec"), NGX_TIME_T_LEN + 4, ngx_http_log_msec },
     { ngx_string("request_time"), NGX_TIME_T_LEN + 4,
@@ -308,6 +310,8 @@ ngx_http_log_handler(ngx_http_request_t *r)
     ngx_http_log_buf_t       *buffer;
     ngx_http_log_loc_conf_t  *lcf;
 
+
+//#jimmy-4-6 start
     ngx_http_log_division_conf_t  *div;
     ngx_http_log_div_var_t div_var_t;
     
@@ -318,6 +322,9 @@ ngx_http_log_handler(ngx_http_request_t *r)
     div_var_t.sent_bytes_per_count_header=0;
     div_var_t.sent_bytes_remaining=0;
     div_var_t.sent_bytes_remaining_header=0;
+
+//#jimmy-4-6 start
+
 
     ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "http log handler");
@@ -330,6 +337,7 @@ ngx_http_log_handler(ngx_http_request_t *r)
         return NGX_OK;
     }
 
+//#jimmy-4-7 start
     div=lcf->div;
     div_var_t.div_msec=div->sectime * 1000;
     if(div != NULL)
@@ -359,154 +367,153 @@ ngx_http_log_handler(ngx_http_request_t *r)
 		div_var_t.sent_bytes_remaining_header= (r->connection->sent) - (div_var_t.sent_bytes_per_count_header * (div_var_t.count-1));
 
 	    	ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-			"suyong http log handler request / division time : %d(%s) / %d = %d, remaining milli second time = %d ",request_time_msec,request_time_str,div->sectime*1000,div_var_t.count,div_var_t.remaining_msec);
-   	 	ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-			"suyong http log handler total sent %d, %d per %d seconds( %d Bps )",
-                	r->connection->sent - r->header_size,div_var_t.sent_bytes_per_count,div->sectime,Bps);
+			"suyong log handler request / division time : %d(%s) / %d = %d,	remaining milli second time = %d (./src/http/modules/ngx_http_log_module.c)",
+			request_time_msec,request_time_str,div->sectime*1000,div_var_t.count,div_var_t.remaining_msec);
 
-	    	ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong http log handler remaining sent %d per %d milli seconds",
+   	 	ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+			"suyong log handler total sent %d, %d per %d seconds( %d Bps ) (./src/http/modules/ngx_http_log_module.c)",
+                	r->connection->sent - r->header_size,div_var_t.sent_bytes_per_count,div->sectime,Bps);
+/*
+	    	ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+		     "suyong log handler remaining sent %d per %d milli seconds (./src/http/modules/ngx_http_log_module.c)",
         	        div_var_t.sent_bytes_remaining,div_var_t.remaining_msec);
+*/
 	}
 
     }
-
+//#jimmy-4-7 end
 
     log = lcf->logs->elts;
     for (l = 0; l < lcf->logs->nelts; l++) {
-	for(z=1;z<=div_var_t.count;z++) //div count for
+	for(z=1;z<=div_var_t.count;z++) //#jimmy-4-8 div count for
 	{
-		div_var_t.current_count=z;
+		div_var_t.current_count=z; //jimmy-4-8
 
-        if (log[l].filter) {
-            if (ngx_http_complex_value(r, log[l].filter, &val) != NGX_OK) {
-                return NGX_ERROR;
-            }
+	        if (log[l].filter) {
+        	    if (ngx_http_complex_value(r, log[l].filter, &val) != NGX_OK) {
+	                return NGX_ERROR;
+        	    }
 
-            if (val.len == 0 || (val.len == 1 && val.data[0] == '0')) {
-                continue;
-            }
-        }
+	            if (val.len == 0 || (val.len == 1 && val.data[0] == '0')) {
+        	        continue;
+	            }
+        	}
 
-        if (ngx_time() == log[l].disk_full_time) {
+	        if (ngx_time() == log[l].disk_full_time) {
 
-            /*
-             * on FreeBSD writing to a full filesystem with enabled softupdates
-             * may block process for much longer time than writing to non-full
-             * filesystem, so we skip writing to a log for one second
-             */
+	            /*
+        	     * on FreeBSD writing to a full filesystem with enabled softupdates
+	             * may block process for much longer time than writing to non-full
+        	     * filesystem, so we skip writing to a log for one second
+	             */
 
-            continue;
-        }
+        	    continue;
+	        }
 
-        ngx_http_script_flush_no_cacheable_variables(r, log[l].format->flushes);
+	        ngx_http_script_flush_no_cacheable_variables(r, log[l].format->flushes);
 
-        len = 0;
-        op = log[l].format->ops->elts;
-        for (i = 0; i < log[l].format->ops->nelts; i++) {
-            if (op[i].len == 0) {
-                len += op[i].getlen(r, op[i].data);
+	        len = 0;
+        	op = log[l].format->ops->elts;
+	        for (i = 0; i < log[l].format->ops->nelts; i++) {
+        	    if (op[i].len == 0) {
+                	len += op[i].getlen(r, op[i].data);
 
-            } else {
-                len += op[i].len;
-            }
-        }
+	            } else {
+        	        len += op[i].len;
+	            }
+        	}
 
-        if (log[l].syslog_peer) {
+	        if (log[l].syslog_peer) {
 
-            /* length of syslog's PRI and HEADER message parts */
-            len += sizeof("<255>Jan 01 00:00:00 ") - 1
-                   + ngx_cycle->hostname.len + 1
-                   + log[l].syslog_peer->tag.len + 2;
+	            /* length of syslog's PRI and HEADER message parts */
+        	    len += sizeof("<255>Jan 01 00:00:00 ") - 1
+                	   + ngx_cycle->hostname.len + 1
+	                   + log[l].syslog_peer->tag.len + 2;
 
-            goto alloc_line;
-        }
+        	    goto alloc_line;
+	        }
 
-        len += NGX_LINEFEED_SIZE;
-
-        buffer = log[l].file ? log[l].file->data : NULL;
-
-        if (buffer) {
-
-            if (len > (size_t) (buffer->last - buffer->pos)) {
-
-                ngx_http_log_write(r, &log[l], buffer->start,
-                                   buffer->pos - buffer->start);
-
-
-                buffer->pos = buffer->start;
-            }
-
-            if (len <= (size_t) (buffer->last - buffer->pos)) {
-
-                p = buffer->pos;
-
-                if (buffer->event && p == buffer->start) {
-                    ngx_add_timer(buffer->event, buffer->flush);
-                }
-
-                for (i = 0; i < log[l].format->ops->nelts; i++) {
-                    p = op[i].run(r, p, &op[i],&div_var_t);
-                }
-
-                ngx_linefeed(p);
-
-                buffer->pos = p;
-
-                continue;
-            }
-
-            if (buffer->event && buffer->event->timer_set) {
-                ngx_del_timer(buffer->event);
-            }
-        }
-
-    alloc_line:
-
-        line = ngx_pnalloc(r->pool, len);
-        if (line == NULL) {
-            return NGX_ERROR;
-        }
-	ngx_memzero(line, len); //suyong
-       //ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong http log length : %z",len); 
-
-        p = line;
-
-        if (log[l].syslog_peer) {
-            p = ngx_syslog_add_header(log[l].syslog_peer, line);
-        }
-
-// log add creator
-        for (i = 0; i < log[l].format->ops->nelts; i++) {
-    	    //ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong http test1-0 log : %d:%ui",i,(ngx_uint_t)&op[i].data); 
-    //	    ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong http test1-0 log : %d/%d",i,log[l].format->ops->nelts); 
-            p = op[i].run(r, p, &op[i],&div_var_t);
-    //	    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong http test1-1 log : %s",line); 
-        }
+	        len += NGX_LINEFEED_SIZE;
 	
-    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong http test2 log : %s",line); 
+	        buffer = log[l].file ? log[l].file->data : NULL;
 
-        if (log[l].syslog_peer) {
+	        if (buffer) {
+	
+        	    if (len > (size_t) (buffer->last - buffer->pos)) {
 
-            size = p - line;
+                	ngx_http_log_write(r, &log[l], buffer->start,
+                        	           buffer->pos - buffer->start);
 
-            n = ngx_syslog_send(log[l].syslog_peer, line, size);
 
-            if (n < 0) {
-                ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
-                              "send() to syslog failed");
+	                buffer->pos = buffer->start;
+        	    }
 
-            } else if ((size_t) n != size) {
-                ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
-                              "send() to syslog has written only %z of %uz",
-                              n, size);
-            }
-            continue;
-        }
+	            if (len <= (size_t) (buffer->last - buffer->pos)) {
 
-        ngx_linefeed(p);
+        	        p = buffer->pos;
 
-       	ngx_http_log_write(r, &log[l], line, p - line);
-	}//div end for
+	                if (buffer->event && p == buffer->start) {
+        	            ngx_add_timer(buffer->event, buffer->flush);
+	                }
+
+        	        for (i = 0; i < log[l].format->ops->nelts; i++) {
+	                    p = op[i].run(r, p, &op[i],&div_var_t);
+        	        }
+
+	                ngx_linefeed(p);
+
+        	        buffer->pos = p;
+
+	                continue;
+        	    }
+
+	            if (buffer->event && buffer->event->timer_set) {
+        	        ngx_del_timer(buffer->event);
+	            }
+	        }
+
+	    alloc_line:
+
+	        line = ngx_pnalloc(r->pool, len);
+        	if (line == NULL) {
+	            return NGX_ERROR;
+        	}
+		ngx_memzero(line, len); //$jimmy-4-8
+
+	        p = line;
+
+	        if (log[l].syslog_peer) {
+        	    p = ngx_syslog_add_header(log[l].syslog_peer, line);
+	        }
+
+        	for (i = 0; i < log[l].format->ops->nelts; i++) { //$jimmy-4-8 log add creator
+	            p = op[i].run(r, p, &op[i],&div_var_t);
+	        }
+	
+	    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong log : %s (./src/http/modules/ngx_http_log_module.c)",line); 
+
+	        if (log[l].syslog_peer) {
+	
+        	    size = p - line;
+
+	            n = ngx_syslog_send(log[l].syslog_peer, line, size);
+
+        	    if (n < 0) {
+                	ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                        	      "send() to syslog failed");
+
+	            } else if ((size_t) n != size) {
+        	        ngx_log_error(NGX_LOG_WARN, r->connection->log, 0,
+                	              "send() to syslog has written only %z of %uz",
+                        	      n, size);
+	            }
+        	    continue;
+	        }
+
+	        ngx_linefeed(p);
+
+	       	ngx_http_log_write(r, &log[l], line, p - line);
+	}//#jimmy-4-8 end div end for
     }
 
     return NGX_OK;
@@ -993,7 +1000,7 @@ ngx_http_log_time(ngx_http_request_t *r, u_char *buf, ngx_http_log_op_t *op,ngx_
                       ngx_cached_http_log_time.len);
 }
 
-static u_char *
+static u_char * //#jimmy-3-3
 ngx_http_log_time_korean(ngx_http_request_t *r, u_char *buf, ngx_http_log_op_t *op,ngx_http_log_div_var_t *div_var_t)
 {
     if(div_var_t->count == 1)
@@ -1557,7 +1564,7 @@ ngx_http_log_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
     return NGX_CONF_OK;
 }
 
-static char *ngx_http_log_division_set(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
+static char *ngx_http_log_division_set(ngx_conf_t *cf, ngx_command_t *cmd, void *conf) //#jimmy-4-3
 {
     ngx_http_log_loc_conf_t *llcf = conf;
 

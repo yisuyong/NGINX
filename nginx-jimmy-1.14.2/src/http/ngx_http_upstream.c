@@ -816,7 +816,7 @@ ngx_http_upstream_cache(ngx_http_request_t *r, ngx_http_upstream_t *u)
 
     
     if (c == NULL) {
-ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong test 캐시파일이 항상 널..");
+ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong 캐시구조체 초기 ..(./src/http/ngx_http_upstream.c)");
 
         if (!(r->method & u->conf->cache_methods)) {
             return NGX_DECLINED;

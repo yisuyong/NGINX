@@ -658,9 +658,12 @@ ngx_http_file_cache_read(ngx_http_request_t *r, ngx_http_cache_t *c)
             c->updating = 1;
             c->lock_time = c->node->lock_time;
             rc = NGX_HTTP_CACHE_STALE;
+/*
         ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                        "suyong test cache http file cache expired: %i valid_sec : %T, lock_age : %i, Lock_time : %T",
                        rc, c->valid_sec,c->lock_age,c->lock_time);
+
+*/
         }
 
         ngx_shmtx_unlock(&cache->shpool->mutex);

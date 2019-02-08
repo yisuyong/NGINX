@@ -1,4 +1,4 @@
-#define NGX_CONFIGURE " --with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now' --prefix=/usr/share/nginx2 --conf-path=/usr/share/nginx2/etc/nginx/nginx.conf --http-log-path=/usr/share/nginx2/var/log/nginx/access.log --error-log-path=/usr/share/nginx2/var/log/nginx/error.log --lock-path=/usr/share/nginx2/var/lock/nginx.lock --pid-path=/usr/share/nginx2/run/nginx.pid --http-client-body-temp-path=/usr/share/nginx2/var/lib/nginx/body --http-fastcgi-temp-path=/usr/share/nginx2/var/lib/nginx/fastcgi --http-proxy-temp-path=/usr/share/nginx2/var/lib/nginx/proxy --http-scgi-temp-path=/usr/share/nginx2/var/lib/nginx/scgi --http-uwsgi-temp-path=/usr/share/nginx2/var/lib/nginx/uwsgi --with-pcre-jit --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_addition_module --with-http_dav_module --with-http_geoip_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_image_filter_module --with-http_v2_module --with-http_sub_module --with-http_xslt_module --with-stream --with-stream_ssl_module --with-stream_geoip_module --with-stream_ssl_preread_module --with-stream_realip_module --with-file-aio --with-mail --with-mail_ssl_module --with-threads --with-compat --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx_cache_purge --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/nginx-module-vts --with-debug"
+#define NGX_CONFIGURE " --with-cc-opt='-g -O2 -fPIE -fstack-protector-strong -Wformat -Werror=format-security -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-Bsymbolic-functions -fPIE -pie -Wl,-z,relro -Wl,-z,now' --prefix=/usr/share/nginx2 --conf-path=/usr/share/nginx2/etc/nginx/nginx.conf --http-log-path=/usr/share/nginx2/var/log/nginx/access.log --error-log-path=/usr/share/nginx2/var/log/nginx/error.log --lock-path=/usr/share/nginx2/var/lock/nginx.lock --pid-path=/usr/share/nginx2/run/nginx.pid --http-client-body-temp-path=/usr/share/nginx2/var/lib/nginx/body --http-fastcgi-temp-path=/usr/share/nginx2/var/lib/nginx/fastcgi --http-proxy-temp-path=/usr/share/nginx2/var/lib/nginx/proxy --http-scgi-temp-path=/usr/share/nginx2/var/lib/nginx/scgi --http-uwsgi-temp-path=/usr/share/nginx2/var/lib/nginx/uwsgi --with-pcre-jit --with-http_ssl_module --with-http_stub_status_module --with-http_realip_module --with-http_auth_request_module --with-http_addition_module --with-http_dav_module --with-http_geoip_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_image_filter_module --with-http_v2_module --with-http_sub_module --with-http_xslt_module --with-stream --with-stream_ssl_module --with-stream_geoip_module --with-stream_ssl_preread_module --with-stream_realip_module --with-file-aio --with-mail --with-mail_ssl_module --with-threads --with-compat --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx_cache_purge --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/nginx-module-vts --add-module=/suyong1/devel/nginx_mod/nginx-jimmy-1.14.2/custom_modules/ngx-module-otu --with-debug"
 
 #ifndef NGX_DEBUG
 #define NGX_DEBUG  1
@@ -480,6 +480,11 @@
 
 #ifndef NGX_STAT_STUB
 #define NGX_STAT_STUB  1
+#endif
+
+
+#ifndef NGX_HTTP_OTU
+#define NGX_HTTP_OTU  1
 #endif
 
 

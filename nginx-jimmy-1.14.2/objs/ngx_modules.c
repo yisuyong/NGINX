@@ -54,6 +54,7 @@ extern ngx_module_t  ngx_http_upstream_zone_module;
 extern ngx_module_t  ngx_http_stub_status_module;
 extern ngx_module_t  ngx_http_cache_purge_module;
 extern ngx_module_t  ngx_http_vhost_traffic_status_module;
+extern ngx_module_t  ngx_http_one_time_url_module;
 extern ngx_module_t  ngx_http_write_filter_module;
 extern ngx_module_t  ngx_http_header_filter_module;
 extern ngx_module_t  ngx_http_chunked_filter_module;
@@ -152,6 +153,7 @@ ngx_module_t *ngx_modules[] = {
     &ngx_http_stub_status_module,
     &ngx_http_cache_purge_module,
     &ngx_http_vhost_traffic_status_module,
+    &ngx_http_one_time_url_module,
     &ngx_http_write_filter_module,
     &ngx_http_header_filter_module,
     &ngx_http_chunked_filter_module,
@@ -252,6 +254,7 @@ char *ngx_module_names[] = {
     "ngx_http_stub_status_module",
     "ngx_http_cache_purge_module",
     "ngx_http_vhost_traffic_status_module",
+    "ngx_http_one_time_url_module",
     "ngx_http_write_filter_module",
     "ngx_http_header_filter_module",
     "ngx_http_chunked_filter_module",
