@@ -1,5 +1,6 @@
 #include "ngx_http_one_time_url.h"
 
+
 static ngx_command_t  ngx_http_one_time_url_commands[] = {
 
   { ngx_string("otu_version"), 
@@ -25,6 +26,14 @@ static ngx_command_t  ngx_http_one_time_url_commands[] = {
     NULL
   },
   {
+    ngx_string("otu_param"),
+    NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
+    ngx_conf_set_str_slot,
+    NGX_HTTP_LOC_CONF_OFFSET,
+    offsetof(ngx_http_one_time_url_loc_conf_t, param),
+    NULL
+  },
+  {
     ngx_string("otu_bypass"),
     NGX_HTTP_SRV_CONF|NGX_HTTP_LOC_CONF|NGX_CONF_TAKE1,
     ngx_conf_set_str_slot,
@@ -33,9 +42,8 @@ static ngx_command_t  ngx_http_one_time_url_commands[] = {
     NULL
   },
   ngx_null_command
+
 };
-
-
 
 static ngx_http_module_t ngx_http_one_time_url_module_ctx = {
   NULL, /* preconfiguration */
@@ -71,8 +79,10 @@ static ngx_int_t ngx_http_one_time_url_handler(ngx_http_request_t *r)
 
    olcf=ngx_http_get_module_loc_conf(r,ngx_http_one_time_url_module);
 
+   if(olcf->run == NGX_CONF_UNSET_PTR)
+	return NGX_OK;
+
    olcf->run(r,olcf);
-   //return NGX_DECLINED;
    return NGX_OK;
 
 }
@@ -89,7 +99,8 @@ static void *ngx_http_one_time_url_create_loc_conf(ngx_conf_t *cf)
     return NULL;
   }
 
-  conf->version = NGX_CONF_UNSET;
+  conf->version = NGX_CONF_UNSET_UINT;
+  conf->run=NGX_CONF_UNSET_PTR;
   
   return conf;
 
@@ -98,34 +109,41 @@ static void *ngx_http_one_time_url_create_loc_conf(ngx_conf_t *cf)
 
 static char *ngx_http_one_time_url_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 {
+
     ngx_http_one_time_url_loc_conf_t  *prev = parent;
     ngx_http_one_time_url_loc_conf_t  *conf = child;
 
     if (conf->version >= 1) 
     {
-	ngx_conf_merge_uint_value(conf->version, prev->version, 1);
+
+//fprintf(stdout,"befor set prev : %ld %s %s %s %s\n",prev->version,prev->key.data,prev->iv.data,prev->bypass.data,prev->param.data);
+//fprintf(stdout,"befor set conf : %ld %s %s %s %s\n\n",conf->version,conf->key.data,conf->iv.data,conf->bypass.data,conf->param.data);
+
+	ngx_conf_merge_uint_value(conf->version, prev->version, 0);
 	ngx_conf_merge_str_value(conf->key, prev->key, "1234567890abcdfe");
 	ngx_conf_merge_str_value(conf->iv, prev->iv, "efdca0987654321");
 	ngx_conf_merge_str_value(conf->bypass, prev->bypass, "*.ts");
+	ngx_conf_merge_str_value(conf->param, prev->param, "jimmy");
 
-	if(conf->version ==1)
+//fprintf(stdout,"after set prev : %ld %s %s %s %s\n",prev->version,prev->key.data,prev->iv.data,prev->bypass.data,prev->param.data);
+//fprintf(stdout,"after set conf : %ld %s %s %s %s\n\n",conf->version,conf->key.data,conf->iv.data,conf->bypass.data,conf->param.data);
+
+	switch(conf->version)
 	{
-		conf->run=otu_run_version1;
-        }
-	else
-	{
-		conf->run=otu_run_version2;
+		case 1:
+			conf->run=otu_run_version1;
+			break;
+		case 2:
+			conf->run=otu_run_version2;
+			break;
+		case 0:
+		default:
+			conf->run=NGX_CONF_UNSET_PTR;
+			break;
 	}
-
-	return NGX_CONF_OK;
-    }
-   else
-   {
-        ngx_conf_log_error(NGX_LOG_EMERG, cf, 0, 
-            "otu version must be equal or more than 1");
    }
 
-   return NGX_CONF_ERROR;
+   return NGX_CONF_OK;
 
 }
 
@@ -148,16 +166,28 @@ static ngx_int_t ngx_http_one_time_url_init(ngx_conf_t *cf)
 }
 
 
-
 static ngx_int_t *otu_run_version1(ngx_http_request_t *r,void *conf)
 {
         ngx_http_one_time_url_loc_conf_t *olcf;
+	ngx_uint_t test;
 
         olcf=(ngx_http_one_time_url_loc_conf_t *) conf;
 
-    ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s, uri : %s",
-                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,r->uri.data);
+
+
+    ngx_log_debug6(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s,param : %s, uri : %s",
+                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,olcf->param.data,r->uri.data);
+
+
+	test=sizeof(r->uri);
+	ngx_str_null(&r->uri);
+	ngx_str_set(&r->uri,"sadfsadfsadfsadfqweijhhrklsdaahffklajsddf;kljsadjjfsadfend");
+        
+    ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler test data-size : %i data-len : %i",
+                   test,ngx_strlen(r->uri.data));
+       
 	return NGX_OK;
 }
 
@@ -168,9 +198,11 @@ static ngx_int_t *otu_run_version2(ngx_http_request_t *r,void *conf)
 
         olcf=(ngx_http_one_time_url_loc_conf_t *) conf;
 
-    ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s, uri : %s",
-                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,r->uri.data);
+    ngx_log_debug6(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s,param : %s, uri : %s",
+                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,olcf->param.data,r->uri.data);
 	return NGX_OK;
 }
+
+
 
