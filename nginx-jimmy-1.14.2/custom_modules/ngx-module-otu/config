@@ -6,7 +6,12 @@ ngx_addon_name=ngx_http_one_time_url_module
 HTTP_MODULES="$HTTP_MODULES ngx_http_one_time_url_module"
 NGX_ADDON_SRCS="$NGX_ADDON_SRCS \
                  $ngx_addon_dir/ngx_http_one_time_url.c \
+                 $ngx_addon_dir/ngx_http_one_time_url_run.c \
+                 $ngx_addon_dir/ngx_http_one_time_url_decode_b64.c \
                 "
 HTTP_ADDON_DEPS="$NGX_ADDON_DEPS \
+                $ngx_addon_dir/ngx_http_one_time_url_conf.h \
                 $ngx_addon_dir/ngx_http_one_time_url.h \
+                $ngx_addon_dir/ngx_http_one_time_url_run.h \
+                $ngx_addon_dir/ngx_http_one_time_url_b64.h \
                 "

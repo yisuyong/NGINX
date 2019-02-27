@@ -1,4 +1,6 @@
+#include "ngx_http_one_time_url_conf.h"
 #include "ngx_http_one_time_url.h"
+#include "ngx_http_one_time_url_run.h"
 
 
 static ngx_command_t  ngx_http_one_time_url_commands[] = {
@@ -168,26 +170,27 @@ static ngx_int_t ngx_http_one_time_url_init(ngx_conf_t *cf)
 
 static ngx_int_t *otu_run_version1(ngx_http_request_t *r,void *conf)
 {
+
+	/* encrypt ex) www.zexter.org/a.png?a=123&etc=abcd
+		OTU param create : jimmy=encrypt(www.zexter.org/a.png + vaild time(unixtimestap)) for AES_cbc_encrypt 128bit
+					=ex) jimmy=base64(encrypt("www.zexter.org/a.png?vaildtime=123213"))
+
+		client request = https://www.zexter.org/a.png?a=123&etc=abcd&jimmy=d3d3LnpleHRlci5vcmcvYS5wbmc/dmFpbGR0aW1lPTEyMzIxMw==
+
+		client request = https://www.zexter.org/a.png?a=123&etc=abcd&jmmyy=d3d3LnpleHRlci5vcmcvYS5wbmc/dmFpbGR0aW1lPTEyMzIxMw==
+        */
+
+
         ngx_http_one_time_url_loc_conf_t *olcf;
-	ngx_uint_t test;
 
         olcf=(ngx_http_one_time_url_loc_conf_t *) conf;
 
 
+	if(otu_run_version1_decrypt(r,olcf))
+	{
+		return NGX_OK;	
+	}
 
-    ngx_log_debug6(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s,param : %s, uri : %s",
-                   olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,olcf->param.data,r->uri.data);
-
-
-	test=sizeof(r->uri);
-	ngx_str_null(&r->uri);
-	ngx_str_set(&r->uri,"sadfsadfsadfsadfqweijhhrklsdaahffklajsddf;kljsadjjfsadfend");
-        
-    ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler test data-size : %i data-len : %i",
-                   test,ngx_strlen(r->uri.data));
-       
 	return NGX_OK;
 }
 
@@ -201,6 +204,14 @@ static ngx_int_t *otu_run_version2(ngx_http_request_t *r,void *conf)
     ngx_log_debug6(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "suyong OTU Handler version %i, key : %s, iv : %s, bypass : %s,param : %s, uri : %s",
                    olcf->version,olcf->key.data,olcf->iv.data,olcf->bypass.data,olcf->param.data,r->uri.data);
+
+	ngx_str_null(&r->uri);
+	ngx_str_set(&r->uri,"sadfsadfsadfsadfqweijhhrklsdaahffklajsddf;kljsadjjfsadfend");
+        
+    ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler test data: %s data-len : %i",
+                   r->uri.data,r->uri.len);
+
 	return NGX_OK;
 }
 

@@ -1,0 +1,124 @@
+#include "ngx_http_one_time_url_conf.h"
+#include "ngx_http_one_time_url_run.h"
+
+#include <openssl/aes.h>
+
+
+ngx_int_t vaild_check_otu(ngx_http_one_time_url_loc_conf_t *conf,ngx_str_t *uri,ngx_str_t *args,ngx_str_t *host)
+{
+
+//	args=d3d3LnpleHRlci5vcmcvYS5wbmc/dmFpbGR0aW1lPTEyMzIxMw==
+//	uri=/a.png
+//	host=www.zexter.org:8080
+
+
+//        AES_KEY enc_key, dec_key;
+
+
+	return NGX_OK;
+
+}
+
+u_char *
+ngx_strstrn2(u_char *s1, char *s2, size_t n,ngx_http_request_t *r)
+{
+    u_char  c1, c2;
+    
+    c2 = *(u_char *) s2++;
+
+
+    do {           
+        do {
+            c1 = *s1++;
+            
+            if (c1 == 0) {
+                return NULL;
+            }
+ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler test1 : %c \t %c",c1,c2);
+
+        } while (c1 != c2);
+
+    } while (ngx_strncmp(s1, (u_char *) s2, n) != 0);
+
+    return --s1;
+}
+
+
+void find_querystring(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t *conf,ngx_str_t *data,ngx_str_t *args)
+{
+
+//	args=test=123&abc=1&jimmy=d3d3LnpleHRlci5vcmcvYS5wbmc/dmFpbGR0aW1lPTEyMzIxMw==
+	
+	u_char *query=args->data;
+	u_char *param=conf->param.data;
+
+	u_char buffer[conf->param.len];
+
+	ngx_uint_t i,n=1;
+
+	while(n <= args->len)
+	{
+		for(i=0;i<conf->param.len;i++)
+		{
+
+			buffer[i]=*query++;
+
+			
+			n++;
+
+			if(buffer[i]==' ')
+			{
+				for(;i<conf->param.len;i++)
+				{
+					buffer[i]='\0';
+				}
+				break;
+			}
+
+
+
+			if(buffer[i]!=param[0])
+			{
+				continue;
+			}
+
+		}
+		ngx_log_debug3(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler test1 %s \t %i/%i",buffer,n,args->len);
+		
+	}
+}
+
+ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t *conf)
+{
+	ngx_str_t uri;
+	ngx_str_t data;
+	ngx_str_t host;
+
+	ngx_log_debug7(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler version %i, key : %V, iv : %V, bypass : %V,param : %V, uri : %V, args : %V",
+                   conf->version,&conf->key,&conf->iv,&conf->bypass,&conf->param,&r->uri,&r->args);
+
+	ngx_str_set(&host,r->headers_in.host->value.data);
+	host.len=r->headers_in.host->value.len;
+
+	ngx_str_set(&uri,r->uri.data);
+	uri.len=r->uri.len;
+
+	
+	find_querystring(r,conf,&data,&r->args);
+
+	ngx_str_set(&data,r->args.data);
+	data.len=r->args.len;
+
+
+	ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler time : %T uri : %V, args: %V, Host: %V",
+                  ngx_time(),&uri,&data,&host);
+
+	if(vaild_check_otu(conf,&uri,&data,&host))
+	{
+		return NGX_OK;
+	}
+
+	return NGX_ERROR;
+}
