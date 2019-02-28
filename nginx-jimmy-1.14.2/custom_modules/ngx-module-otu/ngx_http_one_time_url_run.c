@@ -11,6 +11,8 @@ ngx_int_t ngx_http_one_time_url_deny(ngx_http_request_t *r)
 
     u_char message[]="Unauthorized.";
 
+    ngx_int_t rc;
+
     /* Set the Content-Type header. */
     r->headers_out.content_type.len = sizeof("text/plain") - 1;
     r->headers_out.content_type.data = (u_char *) "text/plain";
@@ -34,7 +36,11 @@ ngx_int_t ngx_http_one_time_url_deny(ngx_http_request_t *r)
     ngx_http_send_header(r); /* Send the headers */
 
     /* Send the body, and return the status code of the output filter chain. */
-    return ngx_http_output_filter(r, &out);
+    rc=ngx_http_output_filter(r, &out);
+
+    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler session termination rc value : %i",rc);
+    return NGX_ERROR;
+
 } /* ngx_http_hello_world_handler */
 
 
@@ -301,9 +307,8 @@ ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_l
 	}
 	else
 	{
-		return NGX_ERROR;
+		return ngx_http_one_time_url_deny(r);
 	}
-
 
 	ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
                    "suyong OTU Handler time : %T uri : %V, data: %V, Host: %V",
@@ -311,6 +316,7 @@ ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_l
 
 	if(vaild_check_otu(r,conf,&uri,&data,&host)==0)
 	{
+		//vaildtime 빼고 uri 다시 만들어 적용해야함
 		return NGX_OK;
 	}
 

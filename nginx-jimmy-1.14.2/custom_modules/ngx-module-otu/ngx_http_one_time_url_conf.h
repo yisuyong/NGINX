@@ -15,7 +15,7 @@ http {
 }
 */
 
-typedef ngx_int_t *(*ngx_http_one_time_url_op_run_pt) (ngx_http_request_t *r,void *data);
+typedef ngx_int_t (*ngx_http_one_time_url_op_run_pt) (ngx_http_request_t *r,void *data);
 
 typedef struct {
   ngx_uint_t version;

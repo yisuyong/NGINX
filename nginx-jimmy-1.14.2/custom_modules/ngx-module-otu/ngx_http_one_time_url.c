@@ -78,14 +78,19 @@ static ngx_int_t ngx_http_one_time_url_handler(ngx_http_request_t *r)
 {
 
    ngx_http_one_time_url_loc_conf_t *olcf;
+   ngx_int_t rc;
 
    olcf=ngx_http_get_module_loc_conf(r,ngx_http_one_time_url_module);
 
    if(olcf->run == NGX_CONF_UNSET_PTR)
 	return NGX_OK;
 
-   olcf->run(r,olcf);
-   return NGX_OK;
+   rc=olcf->run(r,olcf);
+
+    ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler test rc = %i", rc);
+  
+   return rc;
 
 }
 
@@ -164,11 +169,12 @@ static ngx_int_t ngx_http_one_time_url_init(ngx_conf_t *cf)
 
   *h = ngx_http_one_time_url_handler;
 
+
   return NGX_OK;
 }
 
 
-static ngx_int_t *otu_run_version1(ngx_http_request_t *r,void *conf)
+static ngx_int_t otu_run_version1(ngx_http_request_t *r,void *conf)
 {
 
 	/* encrypt ex) www.zexter.org/a.png?a=123&etc=abcd
@@ -182,20 +188,18 @@ static ngx_int_t *otu_run_version1(ngx_http_request_t *r,void *conf)
 
 
         ngx_http_one_time_url_loc_conf_t *olcf;
+	ngx_int_t rc;
 
         olcf=(ngx_http_one_time_url_loc_conf_t *) conf;
 
 
-	if(otu_run_version1_decrypt(r,olcf))
-	{
-		return NGX_OK;	
-	}
+	rc=otu_run_version1_decrypt(r,olcf);
 
-	return NGX_OK;
+	return rc;
 }
 
 
-static ngx_int_t *otu_run_version2(ngx_http_request_t *r,void *conf)
+static ngx_int_t otu_run_version2(ngx_http_request_t *r,void *conf)
 {
         ngx_http_one_time_url_loc_conf_t *olcf;
 
