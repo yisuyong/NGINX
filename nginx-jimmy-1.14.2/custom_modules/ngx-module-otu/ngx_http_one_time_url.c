@@ -88,7 +88,7 @@ static ngx_int_t ngx_http_one_time_url_handler(ngx_http_request_t *r)
    rc=olcf->run(r,olcf);
 
     ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler test rc = %i", rc);
+                   "suyong OTU Handler return value rc = %i", rc);
   
    return rc;
 
