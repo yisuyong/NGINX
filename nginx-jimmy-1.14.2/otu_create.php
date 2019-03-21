@@ -3,6 +3,8 @@
 $key="1q2w3e4r5t6y7u89";
 $iv="azsxdcfvgbhnjmkl";
 
+#$key="aaaaaaaaaaaaaaaa";
+#$iv="1111111111111111";
 
 function aes128_cbc_encrypt($key, $data, $iv) {
   if(16 !== strlen($key)) $key = hash('MD5', $key, true);

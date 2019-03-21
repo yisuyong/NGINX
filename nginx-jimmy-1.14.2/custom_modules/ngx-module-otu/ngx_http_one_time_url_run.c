@@ -280,8 +280,8 @@ ngx_int_t remove_querystring(ngx_http_request_t *r,u_char *remove_str,ngx_str_t 
 
 	ngx_sprintf(src,"%V\0",src_str);
 
-	ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-               	   "suyong OTU Handler Remove str: %s / src_str : %s",remove_str,src);
+	ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+               	   "suyong OTU Handler Remove str: %s(%d) / src_str : %s(%d)",remove_str,ngx_strlen(remove_str),src,ngx_strlen(src));
 
 	p=(u_char*)ngx_strstr((char *)src,(char *)remove_str);
 	src_tail=p + ngx_strlen(remove_str);
@@ -472,11 +472,17 @@ ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_l
 
 	if(vaild_check_otu(r,conf,&host,&uri,&args,&data)==0)
 	{
-		ngx_uint_t temp_len= data.len + conf->param.len + 2;
+		ngx_uint_t temp_len=data.len + conf->param.len + 2;
 		u_char temp_str[temp_len];
 	
-		ngx_snprintf(temp_str,temp_len,"%s=%s\0",conf->param.data,data.data);
-	
+		memset(temp_str,0x00,sizeof(temp_str));
+
+		ngx_snprintf(temp_str,temp_len,"%V=%V\0",&conf->param,&data);
+
+/*
+	ngx_log_debug5(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                   "suyong OTU Handler test1(%d)  %s(%d) / %s(%d)",temp_len,temp_str,ngx_strlen(temp_str),data.data,ngx_strlen(data.data));
+*/	
 		remove_querystring(r,temp_str,&args);
 
 
@@ -490,9 +496,13 @@ ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_l
 		u_char unparsed_uri_modify_buf[args.len + uri.len + 1 +1];
 		memset(unparsed_uri_modify_buf,0x00,sizeof(unparsed_uri_modify_buf));
 
-		if(args.len>0)
+		if(args.len>0 && uri.len>0)
 		{
 			ngx_sprintf(unparsed_uri_modify_buf,"%V?%V\0",&uri,&args);
+		}
+		else if(args.len>0 && uri.len<=0)
+		{
+			ngx_sprintf(unparsed_uri_modify_buf,"/?%V\0",&args);
 		}
 		else
 		{
