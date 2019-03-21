@@ -84,19 +84,23 @@ ngx_int_t vaild_check_otu(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t
 
 //	host=www.zexter.org:8080
 
+
         AES_KEY dec_key;
 
 	u_char *key,*iv;
 	u_char *b64_dec;
 	u_char *dec_out_check;
+	u_char *dec_out_check_tail;
 
-	size_t	dec_out_len=host->len + uri->len + 25; //(?validtime=20190101121212)
+	size_t	dec_out_len=host->len + uri->len +args->len+ 25; //(?validtime=20190101121212)
 
 	u_char *dec_out;
+	u_char dec_out_last[dec_out_len];
 
 	u_char *vaildtime;
 	u_char vaild_str[1024];
 
+	ngx_uint_t url_len;
 
 	u_char *vaild_url;
 	ngx_uint_t vaild_url_len = host->len + uri->len;
@@ -138,20 +142,55 @@ ngx_int_t vaild_check_otu(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t
 
 	dec_out_check=dec_out;
 
-	for(ngx_uint_t i=0; i < dec_out_len;i++)
+	dec_out_check_tail=(u_char *)ngx_strstr((char *)dec_out_check,"vaildtime=");
+
+	memset(dec_out_last,0x00,sizeof(dec_out_last));
+
+
+	for(ngx_uint_t i=0,y=0; i < dec_out_len;i++)
 	{
 		u_char p=*(dec_out_check++);
 
 		if( p > 127)
 		{	
-			ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler Decrpyt error");
+			ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler data invaild Decrpyt error");
 			return NGX_ERROR;
-		
+		}
+
+		if(dec_out_check==dec_out_check_tail)
+		{
+			y=1;
+			
+		}
+
+		if(y)
+		{
+			if(y>24) //validtime=20190101121212
+			{
+				dec_out_last[i]=p;
+				dec_out_last[i+1]='\0';
+				break;
+			}
+
+			//ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler test1 Decrpyt: %c",p);
+
+			dec_out_last[i]=p;
+			y++;
+		}
+		else
+		{
+			dec_out_last[i]=p;
 		}
 	}
 		
+	dec_out = dec_out_last;
+
+/*
 	ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                	   "suyong OTU Handler Decode data : %s", dec_out);
+                	   "suyong OTU Handler Decode buf data : %s", dec_out_last);
+*/
+	ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+                	   "suyong OTU Handler Decode *data : %s", dec_out);
 
 
         memset(vaild_str, 0x00,sizeof(vaild_str));
@@ -161,11 +200,16 @@ ngx_int_t vaild_check_otu(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t
 	
 	vaildtime=vaildtime+ngx_strlen(vaild_str);
 
-	if(vaildtime != NULL)
+	if(vaildtime == NULL)
 	{
-		ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler vaildtime: %s",vaildtime);
+		ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler vaildtime error");
+		return NGX_ERROR;
 	}
 
+
+
+	//url check
+/*
         memset(vaild_url_str, 0x00,sizeof(vaild_url_str));
 	ngx_sprintf(vaild_url_str,"%V%V",host,uri);
 
@@ -175,7 +219,33 @@ ngx_int_t vaild_check_otu(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t
 		ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler error vaild_url different: %s / %s ",vaild_url_str,dec_out);
 		return NGX_ERROR;
 	}
-	
+	ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler vaild_url : %s / %s ",vaild_url_str,dec_out);
+*/
+        memset(vaild_url_str, 0x00,sizeof(vaild_url_str));
+	ngx_sprintf(vaild_url_str,"%V%V",host,uri);
+	vaild_url=(u_char *)ngx_strstr((char *)dec_out,(char *)vaild_url_str);
+	if(vaild_url == NULL)
+	{
+		ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler error vaild_url different: %s / %s ",vaild_url_str,dec_out);
+		return NGX_ERROR;
+	}
+
+
+	for(url_len=0;url_len<ngx_strlen(vaild_url);url_len++)
+	{
+		u_char p=*(vaild_url++);
+		if(p == '?')
+		{
+			break;
+		}	
+	}
+
+	if(ngx_strlen(vaild_url_str) != url_len)
+	{
+		ngx_log_debug2(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler error vaild_url different2: %s / %s ",vaild_url_str,dec_out);
+		return NGX_ERROR;
+	}
+
 
 	if(current_time_check(r,vaildtime)==0)
 	{
@@ -183,7 +253,6 @@ ngx_int_t vaild_check_otu(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t
 		return NGX_OK;
 	}
 	ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler vaildtime: %s invaild",vaildtime);
-
 
 	return NGX_ERROR;
 
@@ -398,7 +467,7 @@ ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_l
 	}
 
 	ngx_log_debug4(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler times : %T uri : %V, data: %V, Host: %V",
+                   "suyong OTU Handler ngx_current_time : %T uri : %V, data: %V, Host: %V",
                   ngx_time(),&uri,&data,&host);
 
 	if(vaild_check_otu(r,conf,&host,&uri,&args,&data)==0)
@@ -418,38 +487,40 @@ ngx_int_t otu_run_version1_decrypt(ngx_http_request_t *r,ngx_http_one_time_url_l
 */
 
 
-	u_char unparsed_uri_modify_buf[args.len + uri.len + 1 +1];
-	memset(unparsed_uri_modify_buf,0x00,sizeof(unparsed_uri_modify_buf));
+		u_char unparsed_uri_modify_buf[args.len + uri.len + 1 +1];
+		memset(unparsed_uri_modify_buf,0x00,sizeof(unparsed_uri_modify_buf));
 
-	if(args.len>0)
-	{
-		ngx_sprintf(unparsed_uri_modify_buf,"%V?%V\0",&uri,&args);
-	}
-	else
-	{
-		ngx_sprintf(unparsed_uri_modify_buf,"%V\0",&uri);
-	}
+		if(args.len>0)
+		{
+			ngx_sprintf(unparsed_uri_modify_buf,"%V?%V\0",&uri,&args);
+		}
+		else
+		{
+			ngx_sprintf(unparsed_uri_modify_buf,"%V\0",&uri);
+		}
 
-	unparsed_uri_modify = ngx_palloc(r->pool,ngx_strlen(unparsed_uri_modify_buf)); 
+		unparsed_uri_modify = ngx_palloc(r->pool,ngx_strlen(unparsed_uri_modify_buf)); 
 
-	if(unparsed_uri_modify == NULL)
-	{
-		ngx_log_debug0(NGX_LOG_ERR, r->connection->log, 0, "suyong OTU Handler unparsed_uri_modify palloc failed");
-		return ngx_http_one_time_url_deny(r);
-	}
+		if(unparsed_uri_modify == NULL)
+		{
+			ngx_log_debug0(NGX_LOG_ERR, r->connection->log, 0, "suyong OTU Handler unparsed_uri_modify palloc failed");
+			return ngx_http_one_time_url_deny(r);
+		}
 	
-	ngx_cpystrn(unparsed_uri_modify,unparsed_uri_modify_buf,ngx_strlen(unparsed_uri_modify_buf));
+		ngx_cpystrn(unparsed_uri_modify,unparsed_uri_modify_buf,ngx_strlen(unparsed_uri_modify_buf)+1);
 
-	r->unparsed_uri.data=unparsed_uri_modify;
-	r->unparsed_uri.len=ngx_strlen(unparsed_uri_modify);
+		r->unparsed_uri.data=unparsed_uri_modify;
+		r->unparsed_uri.len=ngx_strlen(unparsed_uri_modify);
 	
 
-	ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
-                   "suyong OTU Handler unparsed_uri_mod: %V",
-                  &r->unparsed_uri);
+		ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+        	           "suyong OTU Handler unparsed_uri_mod: %V",
+                	  &r->unparsed_uri);
 
 		return NGX_OK;
 	}
+	ngx_log_debug0(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,
+       	           "suyong OTU Handler decrypt failed");
 
 	return ngx_http_one_time_url_deny(r);
 }
