@@ -231,13 +231,17 @@ ngx_int_t vaild_check_otu(ngx_http_request_t *r,ngx_http_one_time_url_loc_conf_t
 	}
 
 
-	for(url_len=0;url_len<ngx_strlen(vaild_url);url_len++)
+
+	//for(url_len=0;url_len<ngx_strlen(vaild_url);url_len++)
+	for(url_len=0;url_len<ngx_strlen(dec_out);url_len++)
 	{
 		u_char p=*(vaild_url++);
 		if(p == '?')
 		{
+		ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler error test1 break : %c ",p);
 			break;
 		}	
+		ngx_log_debug1(NGX_LOG_DEBUG_HTTP, r->connection->log, 0,"suyong OTU Handler error test1 : %c ",p);
 	}
 
 	if(ngx_strlen(vaild_url_str) != url_len)

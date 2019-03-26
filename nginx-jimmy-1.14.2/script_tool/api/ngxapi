@@ -1,0 +1,161 @@
+#!/bin/bash
+INSTALL_DIR=/usr/share/nginx2
+
+CURL=/usr/bin/curl
+AWK=/usr/bin/awk
+
+function usage() {
+	echo "
+NAME
+        ngxapi - call NGINX API
+
+SYNOPSIS
+        ngxapi [Command]
+
+DESCRIPTION
+        version
+                display NGINX Edge Server version
+
+        reset
+                initialize all caching storage
+
+        reset/[virtual host]
+                initialize caching storage of the virtual host
+
+        command/purge?url=...
+                delete the cached contents (recoverable)
+
+        command/expire?url=...
+                expire TTL of the cached contents immediately
+
+        command/hardpurge?url=...
+                delete the cached contents (not recoverable)
+
+        command/expireafter?url=...\&sec=...
+                enforce TTL of the cached contents in second
+
+        command/resetorigin
+                initialize all origin server connection settings
+
+        command/resetorigin?vhost=...
+                initialize origin server connection settings of the virtual host
+
+        command/restart
+                restart NGINX Edge Server
+
+        command/terminate
+                terminate NGINX Edge Server
+
+        command/cleanup?age=...
+                immediately destroy contents unaccessed AND older than the age
+
+        command/unmount?disk=...
+                Disk excluded from service and unmounted
+
+        command/mount?disk=...
+                Disk mounted and included into service
+
+        monitoring/vhostslist
+                list configured virtual hosts
+
+        monitoring/realtime?type=[JSON or XML]
+                display real-time statistics
+
+        monitoring/average?type=[JSON or XML]
+                display statistics in 5 minute average
+
+        monitoring/accum?type=[JSON or XML]\&reset=[TRUE or FALSE]
+                display accumulated statistics
+
+        monitoring/fileinfo?url=...
+                display caching status of the content
+
+        monitoring/logtrace/info
+                displays real-time info.log
+
+        monitoring/logtrace/sys
+                display real-time sys.log
+
+        monitoring/logtrace/deny
+                displays real-time deny.log
+
+        monitoring/logtrace/originerror
+                display real-time OriginError.log
+
+        monitoring/logtrace/access?vhost=...
+                display real-time Access.log of the virtual host
+
+        monitoring/logtrace/origin?vhost=...
+                display real-time Origin.log of the virtual host
+
+        monitoring/logtrace/monitoring?vhost=...
+                display statistics of the virtual host in 5 minute average
+
+        monitoring/dnslist
+                display resolved and cached IPs
+
+        monitoring/hwinfo
+                display hardware information
+
+        monitoring/ssl?ciphersuite=...
+                display HTTPS Cipher Suite configuration
+
+        monitoring/geoiplist
+                GeoIP database loaded from the path if configured
+
+        conf/server.xml
+                display global configuration (server.xml)
+
+        conf/vhosts.xml
+                display virtual host configuration (vhosts.xml)
+
+        conf/bypass.txt?vhost=...
+                display bypass condition of the virtual host
+
+        conf/ttl.txt?vhost=...
+                display custom TTL of the virtual host
+
+        conf/expires.txt?vhost=...
+                display expires header configuration of the virtual host
+
+        conf/acl.txt?vhost=...
+                display ACL configuration of the virtual host
+
+        conf/reloadall
+                reload all configurations
+
+        conf/reloadserver
+                reload global configuration (server.xml)
+
+        conf/reloadvhosts
+                reload virtual host configuration (vhosts.xml)
+
+REPORTING BUGS
+        Report ngxapi bugs to itx9005a@hyosung.com
+        NGINX Edge Server homepage: <http://www.hyosung.com/>
+"
+}
+
+
+
+if [ $# = 0 ]
+then
+	usage
+else
+	CMD=${1}
+fi
+
+
+
+case "$CMD" in
+ *'command/hardpurge?url='*)
+	URL=$(echo ${CMD}|${AWK} -F'e?url=' '{print $2}')
+	DOMAIN=$(echo ${URL}|grep -o '[^\./]*\.[^\./]*\.[^\./]*')
+	URI=$(echo ${URL}|grep -o '/[^\/]*$')
+	PORT=:8080
+	re=$(${CURL} 127.0.0.1${PORT}${URI} -X PURGE_GET -H "Host: $DOMAIN" -o /dev/null -v -s 2>&1|grep 'HTTP/1.1')
+	echo $re
+	;;
+ *) usage
+	;;
+esac
