@@ -11,8 +11,8 @@ ALGO_HMACSHA256	custom_modules/nginx-secure-token-module/chinacache/ngx_http_sec
 ALL_INCS	objs/Makefile	/^ALL_INCS = -I src\/core \\$/;"	m
 AO_REQUIRE_CAS	src/os/unix/ngx_atomic.h	18;"	d
 B64_H	custom_modules/ngx-module-otu/ngx_http_one_time_url_b64.h	8;"	d
-B64_H	otu_test/b64.h	8;"	d
-B64_H	otu_test/hsitx2_otu.h	9;"	d
+B64_H	script_tool/otu_test/b64.h	8;"	d
+B64_H	script_tool/otu_test/hsitx2_otu.h	9;"	d
 BASE_URL	custom_modules/nginx-secure-token-module/scripts/encryptUrl.php	/^$BASE_URL = $argv[1];$/;"	v
 BASE_URL	custom_modules/nginx-secure-token-module/scripts/encryptUrl.py	/^BASE_URL = sys.argv[1]$/;"	v
 CACHE_CONTROL_FORMAT	custom_modules/nginx-secure-token-module/ngx_http_secure_token_filter_module.c	19;"	d	file:
@@ -1819,13 +1819,13 @@ addrs	src/stream/ngx_stream_upstream.h	/^    ngx_resolver_addr_t               *
 addrs6	src/core/ngx_resolver.h	/^        struct in6_addr      *addrs6;$/;"	m	union:__anon497::__anon499	typeref:struct:__anon497::__anon499::in6_addr
 aes	custom_modules/nginx-secure-token-module/scripts/encryptUrl.py	/^aes = AES.new(ENC_KEY, AES.MODE_CBC, ENC_IV)$/;"	v
 aes128_cbc_decrypt	otu_create.php	/^function aes128_cbc_decrypt($key, $data, $iv) {$/;"	f
-aes128_cbc_decrypt	otu_test/otu_create.php	/^function aes128_cbc_decrypt($key, $data, $iv) {$/;"	f
+aes128_cbc_decrypt	script_tool/otu_test/otu_create.php	/^function aes128_cbc_decrypt($key, $data, $iv) {$/;"	f
 aes128_cbc_encrypt	otu_create.php	/^function aes128_cbc_encrypt($key, $data, $iv) {$/;"	f
-aes128_cbc_encrypt	otu_test/otu_create.php	/^function aes128_cbc_encrypt($key, $data, $iv) {$/;"	f
+aes128_cbc_encrypt	script_tool/otu_test/otu_create.php	/^function aes128_cbc_encrypt($key, $data, $iv) {$/;"	f
 aes256_cbc_decrypt	otu_create.php	/^function aes256_cbc_decrypt($key, $data, $iv) {$/;"	f
-aes256_cbc_decrypt	otu_test/otu_create.php	/^function aes256_cbc_decrypt($key, $data, $iv) {$/;"	f
+aes256_cbc_decrypt	script_tool/otu_test/otu_create.php	/^function aes256_cbc_decrypt($key, $data, $iv) {$/;"	f
 aes256_cbc_encrypt	otu_create.php	/^function aes256_cbc_encrypt($key, $data, $iv) {$/;"	f
-aes256_cbc_encrypt	otu_test/otu_create.php	/^function aes256_cbc_encrypt($key, $data, $iv) {$/;"	f
+aes256_cbc_encrypt	script_tool/otu_test/otu_create.php	/^function aes256_cbc_encrypt($key, $data, $iv) {$/;"	f
 aes_key	src/event/ngx_event_openssl.h	/^    u_char                      aes_key[32];$/;"	m	struct:__anon367
 after_body	src/http/modules/ngx_http_addition_filter_module.c	/^    ngx_str_t     after_body;$/;"	m	struct:__anon212	file:
 aging	src/http/modules/ngx_http_proxy_module.c	/^    time_t                         aging; \/\/#jimmy-2-2$/;"	m	struct:__anon298	file:
@@ -1908,18 +1908,18 @@ avoid_cookies	custom_modules/nginx-secure-token-module/ngx_http_secure_token_con
 b	src/core/ngx_md5.h	/^    uint32_t  a, b, c, d;$/;"	m	struct:__anon504
 b	src/core/ngx_sha1.h	/^    uint32_t  a, b, c, d, e, f;$/;"	m	struct:__anon562
 b64_decode	custom_modules/ngx-module-otu/ngx_http_one_time_url_decode_b64.c	/^u_char *b64_decode (const ngx_str_t *src) {$/;"	f
-b64_decode	otu_test/hsitx2_otu.c	/^b64_decode (const char *src, size_t len) {$/;"	f
+b64_decode	script_tool/otu_test/hsitx2_otu.c	/^b64_decode (const char *src, size_t len) {$/;"	f
 b64_decode_ex	custom_modules/ngx-module-otu/ngx_http_one_time_url_decode_b64.c	/^u_char *b64_decode_ex (const u_char *src, size_t len, size_t *decsize) {$/;"	f
-b64_decode_ex	otu_test/hsitx2_otu.c	/^b64_decode_ex (const char *src, size_t len, size_t *decsize) {$/;"	f
+b64_decode_ex	script_tool/otu_test/hsitx2_otu.c	/^b64_decode_ex (const char *src, size_t len, size_t *decsize) {$/;"	f
 b64_malloc	custom_modules/ngx-module-otu/ngx_http_one_time_url_b64.h	16;"	d
-b64_malloc	otu_test/b64.h	16;"	d
-b64_malloc	otu_test/hsitx2_otu.h	17;"	d
+b64_malloc	script_tool/otu_test/b64.h	16;"	d
+b64_malloc	script_tool/otu_test/hsitx2_otu.h	17;"	d
 b64_realloc	custom_modules/ngx-module-otu/ngx_http_one_time_url_b64.h	19;"	d
-b64_realloc	otu_test/b64.h	19;"	d
-b64_realloc	otu_test/hsitx2_otu.h	20;"	d
+b64_realloc	script_tool/otu_test/b64.h	19;"	d
+b64_realloc	script_tool/otu_test/hsitx2_otu.h	20;"	d
 b64_table	custom_modules/ngx-module-otu/ngx_http_one_time_url_b64.h	/^static const char b64_table[] = {$/;"	v
-b64_table	otu_test/b64.h	/^static const char b64_table[] = {$/;"	v
-b64_table	otu_test/hsitx2_otu.h	/^static const char b64_table[] = {$/;"	v
+b64_table	script_tool/otu_test/b64.h	/^static const char b64_table[] = {$/;"	v
+b64_table	script_tool/otu_test/hsitx2_otu.h	/^static const char b64_table[] = {$/;"	v
 b:current_syntax	contrib/vim/syntax/nginx.vim	/^let b:current_syntax = "nginx"$/;"	v
 b:did_indent	contrib/vim/indent/nginx.vim	/^let b:did_indent = 1$/;"	v
 bTh	custom_modules/bak/nginx-module-vts/share/status.template.html	/^            function bTh(b) {$/;"	f
@@ -2556,9 +2556,9 @@ data	custom_modules/nginx-module-vts/src/ngx_http_vhost_traffic_status_node.h	/^
 data	otu_create.php	/^  $data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);$/;"	v
 data	otu_create.php	/^$data=aes128_cbc_decrypt($key,$decr,$iv);$/;"	v
 data	otu_create.php	/^$data=aes128_cbc_encrypt($key,$argv[1],$iv);$/;"	v
-data	otu_test/otu_create.php	/^  $data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);$/;"	v
-data	otu_test/otu_create.php	/^$data=aes128_cbc_decrypt($key,$decr,$iv);$/;"	v
-data	otu_test/otu_create.php	/^$data=aes128_cbc_encrypt($key,$argv[1],$iv);$/;"	v
+data	script_tool/otu_test/otu_create.php	/^  $data = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key, $data, MCRYPT_MODE_CBC, $iv);$/;"	v
+data	script_tool/otu_test/otu_create.php	/^$data=aes128_cbc_decrypt($key,$decr,$iv);$/;"	v
+data	script_tool/otu_test/otu_create.php	/^$data=aes128_cbc_encrypt($key,$argv[1],$iv);$/;"	v
 data	src/core/ngx_conf_file.h	/^    void                 *data;$/;"	m	struct:ngx_open_file_s
 data	src/core/ngx_connection.h	/^    void               *data;$/;"	m	struct:ngx_connection_s
 data	src/core/ngx_cycle.h	/^    void                     *data;$/;"	m	struct:ngx_shm_zone_s
@@ -2622,7 +2622,7 @@ debug_connection	src/event/ngx_event.h	/^    ngx_array_t   debug_connection;$/;"
 debug_levels	src/core/ngx_log.c	/^static const char *debug_levels[] = {$/;"	v	file:
 debug_points	src/core/ngx_cycle.h	/^    ngx_int_t                 debug_points;$/;"	m	struct:__anon527
 decr	otu_create.php	/^$decr=base64_decode($encr);$/;"	v
-decr	otu_test/otu_create.php	/^$decr=base64_decode($encr);$/;"	v
+decr	script_tool/otu_test/otu_create.php	/^$decr=base64_decode($encr);$/;"	v
 default_port	src/core/ngx_inet.h	/^    in_port_t                 default_port;$/;"	m	struct:__anon516
 default_server	src/http/ngx_http_core_module.h	/^    ngx_http_core_srv_conf_t  *default_server;$/;"	m	struct:__anon174
 default_server	src/http/ngx_http_core_module.h	/^    ngx_http_core_srv_conf_t  *default_server;$/;"	m	struct:ngx_http_addr_conf_s
@@ -2782,7 +2782,7 @@ enable	src/mail/ngx_mail_ssl_module.h	/^    ngx_flag_t       enable;$/;"	m	struc
 enabled	src/stream/ngx_stream_ssl_preread_module.c	/^    ngx_flag_t      enabled;$/;"	m	struct:__anon449	file:
 encoding	src/http/modules/ngx_http_ssi_filter_module.h	/^    unsigned                  encoding:2;$/;"	m	struct:__anon290
 encr	otu_create.php	/^$encr = base64_encode($data);$/;"	v
-encr	otu_test/otu_create.php	/^$encr = base64_encode($data);$/;"	v
+encr	script_tool/otu_test/otu_create.php	/^$encr = base64_encode($data);$/;"	v
 encrypt_uri	custom_modules/nginx-secure-token-module/ngx_http_secure_token_conf.h	/^	ngx_flag_t encrypt_uri;$/;"	m	struct:__anon26
 encrypt_uri_hash_size	custom_modules/nginx-secure-token-module/ngx_http_secure_token_conf.h	/^	size_t encrypt_uri_hash_size;$/;"	m	struct:ngx_http_secure_token_loc_conf_s
 encrypt_uri_iv	custom_modules/nginx-secure-token-module/ngx_http_secure_token_conf.h	/^	ngx_str_t encrypt_uri_iv;$/;"	m	struct:ngx_http_secure_token_loc_conf_s
@@ -3408,7 +3408,7 @@ high	src/stream/ngx_stream_geo_module.c	/^    ngx_stream_geo_high_ranges_t      
 histogram_buckets	custom_modules/bak/nginx-module-vts/src/ngx_http_vhost_traffic_status_module.h	/^    ngx_array_t                            *histogram_buckets;$/;"	m	struct:__anon95
 histogram_buckets	custom_modules/nginx-module-vts/src/ngx_http_vhost_traffic_status_module.h	/^    ngx_array_t                            *histogram_buckets;$/;"	m	struct:__anon50
 hmac_key	src/event/ngx_event_openssl.h	/^    u_char                      hmac_key[32];$/;"	m	struct:__anon367
-host	otu_test/url_parser.h	/^        char *host;$/;"	m	struct:url_parser_url
+host	script_tool/otu_test/url_parser.h	/^        char *host;$/;"	m	struct:url_parser_url
 host	src/core/ngx_inet.h	/^    ngx_str_t                 host;$/;"	m	struct:__anon516
 host	src/event/ngx_event_openssl_stapling.c	/^    ngx_str_t                    host;$/;"	m	struct:__anon364	file:
 host	src/event/ngx_event_openssl_stapling.c	/^    ngx_str_t                    host;$/;"	m	struct:ngx_ssl_ocsp_ctx_s	file:
@@ -3421,7 +3421,7 @@ host	src/stream/ngx_stream_ssl_preread_module.c	/^    ngx_str_t       host;$/;"	
 host	src/stream/ngx_stream_upstream.h	/^    ngx_str_t                          host;$/;"	m	struct:__anon466
 host	src/stream/ngx_stream_upstream.h	/^    ngx_str_t                          host;$/;"	m	struct:ngx_stream_upstream_srv_conf_s
 host_end	src/http/ngx_http_request.h	/^    u_char                           *host_end;$/;"	m	struct:ngx_http_request_s
-host_exists	otu_test/url_parser.h	/^        int host_exists;$/;"	m	struct:url_parser_url
+host_exists	script_tool/otu_test/url_parser.h	/^        int host_exists;$/;"	m	struct:url_parser_url
 host_header	custom_modules/bak/ngx_cache_purge/ngx_cache_purge_module.c	/^    ngx_str_t                      host_header;$/;"	m	struct:__anon101	file:
 host_header	custom_modules/ngx_cache_purge/ngx_cache_purge_module.c	/^    ngx_str_t                      host_header;$/;"	m	struct:__anon65	file:
 host_header	custom_modules/ngx_cache_purge/ngx_cache_purge_module.v1.c	/^    ngx_str_t                      host_header;$/;"	m	struct:__anon53	file:
@@ -3429,7 +3429,7 @@ host_header	custom_modules/ngx_cache_purge/ngx_cache_purge_module_bak.c	/^    ng
 host_header	custom_modules/ngx_cache_purge/ngx_cache_purge_module_ori.c	/^    ngx_str_t                      host_header;$/;"	m	struct:__anon71	file:
 host_header	src/http/modules/ngx_http_proxy_module.c	/^    ngx_str_t                      host_header;$/;"	m	struct:__anon295	file:
 host_header	src/mail/ngx_mail_auth_http_module.c	/^    ngx_str_t                       host_header;$/;"	m	struct:__anon475	file:
-host_ip	otu_test/url_parser.h	/^        char *host_ip;$/;"	m	struct:url_parser_url
+host_ip	script_tool/otu_test/url_parser.h	/^        char *host_ip;$/;"	m	struct:url_parser_url
 host_set	src/http/modules/ngx_http_grpc_module.c	/^    ngx_uint_t                 host_set;$/;"	m	struct:__anon320	file:
 host_start	src/http/ngx_http_request.h	/^    u_char                           *host_start;$/;"	m	struct:ngx_http_request_s
 hostname	src/core/ngx_cycle.h	/^    ngx_str_t                 hostname;$/;"	m	struct:ngx_cycle_s
@@ -3438,7 +3438,7 @@ hostnames	src/http/modules/ngx_http_map_module.c	/^    unsigned                 
 hostnames	src/stream/ngx_stream_map_module.c	/^    ngx_uint_t                    hostnames;      \/* unsigned  hostnames:1 *\/$/;"	m	struct:__anon423	file:
 hostnames	src/stream/ngx_stream_map_module.c	/^    unsigned                      hostnames:1;$/;"	m	struct:__anon422	file:
 hpack	src/http/v2/ngx_http_v2.h	/^    ngx_http_v2_hpack_t              hpack;$/;"	m	struct:ngx_http_v2_connection_s
-hsitx2_otu	otu_test/hsitx2_otu.c	/^int hsitx2_otu(char *queryString,unsigned char *key_string, unsigned char *iv_string)$/;"	f
+hsitx2_otu	script_tool/otu_test/hsitx2_otu.c	/^int hsitx2_otu(char *queryString,unsigned char *key_string, unsigned char *iv_string)$/;"	f
 hsize	src/core/ngx_hash.h	/^    ngx_uint_t        hsize;$/;"	m	struct:__anon538
 http2	src/http/ngx_http_core_module.h	/^    unsigned                   http2:1;$/;"	m	struct:__anon162
 http2	src/http/ngx_http_core_module.h	/^    unsigned                   http2:1;$/;"	m	struct:ngx_http_addr_conf_s
@@ -3615,7 +3615,7 @@ itimerspec_t	src/event/modules/ngx_eventport_module.c	/^} itimerspec_t;$/;"	t	ty
 iv	custom_modules/ngx-module-otu/ngx_http_one_time_url_conf.h	/^  ngx_str_t iv;$/;"	m	struct:__anon75
 iv	custom_modules/ngx-module-otu_bak/ngx_http_one_time_url.h	/^  ngx_str_t iv;$/;"	m	struct:__anon76
 iv	otu_create.php	/^$iv="azsxdcfvgbhnjmkl";$/;"	v
-iv	otu_test/otu_create.php	/^$iv="azsxdcfvgbhnjmkl";$/;"	v
+iv	script_tool/otu_test/otu_create.php	/^$iv="azsxdcfvgbhnjmkl";$/;"	v
 jpeg_quality	src/http/modules/ngx_http_image_filter_module.c	/^    ngx_uint_t                   jpeg_quality;$/;"	m	struct:__anon184	file:
 jqcv	src/http/modules/ngx_http_image_filter_module.c	/^    ngx_http_complex_value_t    *jqcv;$/;"	m	struct:__anon184	file:
 jsonp	custom_modules/bak/nginx-module-vts/src/ngx_http_vhost_traffic_status_module.h	/^    ngx_str_t                               jsonp;$/;"	m	struct:__anon95
@@ -3646,7 +3646,7 @@ key	custom_modules/nginx-secure-token-module/cht/ngx_http_secure_token_cht.c	/^	
 key	custom_modules/ngx-module-otu/ngx_http_one_time_url_conf.h	/^  ngx_str_t key;$/;"	m	struct:__anon75
 key	custom_modules/ngx-module-otu_bak/ngx_http_one_time_url.h	/^  ngx_str_t key;$/;"	m	struct:__anon76
 key	otu_create.php	/^$key="1q2w3e4r5t6y7u89";$/;"	v
-key	otu_test/otu_create.php	/^$key="1q2w3e4r5t6y7u89";$/;"	v
+key	script_tool/otu_test/otu_create.php	/^$key="1q2w3e4r5t6y7u89";$/;"	v
 key	src/core/ngx_hash.h	/^    ngx_hash_key_pt   key;$/;"	m	struct:__anon537
 key	src/core/ngx_hash.h	/^    ngx_str_t         key;$/;"	m	struct:__anon535
 key	src/core/ngx_hash.h	/^    ngx_str_t         key;$/;"	m	struct:__anon539
@@ -3975,13 +3975,14 @@ mTh	custom_modules/nginx-module-vts/share/status.template.html	/^            fun
 mail_state	src/mail/ngx_mail.h	/^    ngx_uint_t              mail_state;$/;"	m	struct:__anon490
 main	custom_modules/bak/nginx-module-vts/util/fileToHex.pl	/^package main;$/;"	p
 main	custom_modules/nginx-module-vts/util/fileToHex.pl	/^package main;$/;"	p
-main	otu_test/hsitx2_otu.c	/^int main(int argc, char *argv[])  $/;"	f
-main	otu_test/test.c	/^int main(int argc, char **argv)$/;"	f
+main	script_tool/otu_test/hsitx2_otu.c	/^int main(int argc, char *argv[])  $/;"	f
+main	script_tool/otu_test/test.c	/^int main(int argc, char **argv)$/;"	f
 main	src/core/nginx.c	/^main(int argc, char *const *argv)$/;"	f
 main	src/http/ngx_http_cache.h	/^    u_char                           main[NGX_HTTP_CACHE_KEY_LEN];$/;"	m	struct:ngx_http_cache_s
 main	src/http/ngx_http_request.h	/^    ngx_http_request_t               *main;$/;"	m	struct:ngx_http_request_s
 main	src/http/ngx_http_script.h	/^    void                       *main;$/;"	m	struct:__anon142
 main	src/stream/ngx_stream_script.h	/^    void                         *main;$/;"	m	struct:__anon441
+main	test.c	/^int main()$/;"	f
 main_conf	src/http/ngx_http_config.h	/^    void        **main_conf;$/;"	m	struct:__anon112
 main_conf	src/http/ngx_http_request.h	/^    void                            **main_conf;$/;"	m	struct:ngx_http_request_s
 main_conf	src/mail/ngx_mail.h	/^    void                  **main_conf;$/;"	m	struct:__anon476
@@ -9603,8 +9604,8 @@ p3p	src/http/modules/ngx_http_userid_filter_module.c	/^    ngx_str_t   p3p;$/;"	
 pad	custom_modules/nginx-secure-token-module/scripts/encryptUrl.php	/^$pad = 16 - (strlen($signedUrl) % 16);$/;"	v
 padding	otu_create.php	/^  $padding = 16 - (strlen($data) % 16);$/;"	v
 padding	otu_create.php	/^  $padding = ord($data[strlen($data) - 1]);$/;"	v
-padding	otu_test/otu_create.php	/^  $padding = 16 - (strlen($data) % 16);$/;"	v
-padding	otu_test/otu_create.php	/^  $padding = ord($data[strlen($data) - 1]);$/;"	v
+padding	script_tool/otu_test/otu_create.php	/^  $padding = 16 - (strlen($data) % 16);$/;"	v
+padding	script_tool/otu_test/otu_create.php	/^  $padding = ord($data[strlen($data) - 1]);$/;"	v
 padding	src/http/modules/ngx_http_fastcgi_module.c	/^    size_t                         padding;$/;"	m	struct:__anon304	file:
 padding	src/http/modules/ngx_http_grpc_module.c	/^    u_char                     padding;$/;"	m	struct:__anon323	file:
 padding	src/http/v2/ngx_http_v2.h	/^    size_t                           padding;$/;"	m	struct:__anon358
@@ -9668,7 +9669,7 @@ passwd	src/mail/ngx_mail.h	/^    ngx_str_t               passwd;$/;"	m	struct:__
 passwords	src/http/modules/ngx_http_ssl_module.h	/^    ngx_array_t                    *passwords;$/;"	m	struct:__anon285
 passwords	src/mail/ngx_mail_ssl_module.h	/^    ngx_array_t     *passwords;$/;"	m	struct:__anon470
 passwords	src/stream/ngx_stream_ssl_module.h	/^    ngx_array_t     *passwords;$/;"	m	struct:__anon412
-path	otu_test/url_parser.h	/^        char *path;$/;"	m	struct:url_parser_url
+path	script_tool/otu_test/url_parser.h	/^        char *path;$/;"	m	struct:url_parser_url
 path	src/core/ngx_file.h	/^    ngx_path_t                *path;$/;"	m	struct:__anon565
 path	src/http/modules/ngx_http_dav_module.c	/^    ngx_str_t   path;$/;"	m	struct:__anon331	file:
 path	src/http/modules/ngx_http_userid_filter_module.c	/^    ngx_str_t   path;$/;"	m	struct:__anon177	file:
@@ -9762,7 +9763,7 @@ port	custom_modules/ngx_cache_purge/ngx_cache_purge_module.c	/^    ngx_str_t    
 port	custom_modules/ngx_cache_purge/ngx_cache_purge_module.v1.c	/^    ngx_str_t                      port;$/;"	m	struct:__anon53	file:
 port	custom_modules/ngx_cache_purge/ngx_cache_purge_module_bak.c	/^    ngx_str_t                      port;$/;"	m	struct:__anon59	file:
 port	custom_modules/ngx_cache_purge/ngx_cache_purge_module_ori.c	/^    ngx_str_t                      port;$/;"	m	struct:__anon71	file:
-port	otu_test/url_parser.h	/^        int port;$/;"	m	struct:url_parser_url
+port	script_tool/otu_test/url_parser.h	/^        int port;$/;"	m	struct:url_parser_url
 port	src/core/ngx_inet.h	/^    in_port_t                 port;$/;"	m	struct:__anon516
 port	src/core/ngx_resolver.h	/^    u_short                   port;$/;"	m	struct:__anon495
 port	src/core/ngx_resolver.h	/^    u_short                   port;$/;"	m	struct:__anon496
@@ -9879,7 +9880,7 @@ processor_params	custom_modules/nginx-secure-token-module/ngx_http_secure_token_
 processors_hash	custom_modules/nginx-secure-token-module/ngx_http_secure_token_conf.h	/^	ngx_hash_t  processors_hash;$/;"	m	struct:ngx_http_secure_token_loc_conf_s
 profiles	src/misc/ngx_google_perftools_module.c	/^    ngx_str_t  profiles;$/;"	m	struct:__anon363	file:
 program	custom_modules/replace-filter-nginx-module/src/ngx_http_replace_filter_module.h	/^    sre_program_t             *program;$/;"	m	struct:__anon3
-protocol	otu_test/url_parser.h	/^        char *protocol;$/;"	m	struct:url_parser_url
+protocol	script_tool/otu_test/url_parser.h	/^        char *protocol;$/;"	m	struct:url_parser_url
 protocol	src/mail/ngx_mail.h	/^    ngx_mail_protocol_t        *protocol;$/;"	m	struct:__anon492
 protocol	src/mail/ngx_mail.h	/^    ngx_mail_protocol_t    *protocol;$/;"	m	struct:__anon485
 protocol	src/mail/ngx_mail.h	/^    unsigned                protocol:3;$/;"	m	struct:__anon490
@@ -9937,7 +9938,7 @@ quality	src/http/modules/ngx_http_mp4_module.c	/^    u_char    quality[2];$/;"	m
 quality	src/http/modules/ngx_http_mp4_module.c	/^    u_char    quality[2];$/;"	m	struct:__anon230	file:
 query	src/core/ngx_resolver.h	/^    u_char                   *query;$/;"	m	struct:__anon497
 query6	src/core/ngx_resolver.h	/^    u_char                   *query6;$/;"	m	struct:__anon497
-query_string	otu_test/url_parser.h	/^        char *query_string;$/;"	m	struct:url_parser_url
+query_string	script_tool/otu_test/url_parser.h	/^        char *query_string;$/;"	m	struct:url_parser_url
 query_token_expires_time	custom_modules/nginx-secure-token-module/ngx_http_secure_token_conf.h	/^	time_t 		query_token_expires_time;$/;"	m	struct:ngx_http_secure_token_loc_conf_s
 queue	src/core/ngx_connection.h	/^    ngx_queue_t         queue;$/;"	m	struct:ngx_connection_s
 queue	src/core/ngx_open_file_cache.h	/^    ngx_queue_t              queue;$/;"	m	struct:ngx_cached_open_file_s
@@ -11235,7 +11236,7 @@ uniq	src/core/ngx_open_file_cache.h	/^    ngx_file_uniq_t          uniq;$/;"	m	s
 uniq	src/core/ngx_open_file_cache.h	/^    ngx_file_uniq_t          uniq;$/;"	m	struct:ngx_cached_open_file_s
 uniq	src/http/ngx_http_cache.h	/^    ngx_file_uniq_t                  uniq;$/;"	m	struct:__anon126
 uniq	src/http/ngx_http_cache.h	/^    ngx_file_uniq_t                  uniq;$/;"	m	struct:ngx_http_cache_s
-unparsed_uri	src/http/ngx_http_request.h	/^    ngx_str_t                         unparsed_uri;$/;"	m	struct:ngx_http_request_s
+unparsed_uri	src/http/ngx_http_request.h	/^    ngx_str_t                         unparsed_uri; \/\/ = ngxinx.conf의 $request_uri 변수 반영 $/;"	m	struct:ngx_http_request_s
 updated	src/http/ngx_http_cache.h	/^    unsigned                         updated:1;$/;"	m	struct:ngx_http_cache_s
 updating	src/http/ngx_http_cache.h	/^    unsigned                         updating:1;$/;"	m	struct:__anon126
 updating	src/http/ngx_http_cache.h	/^    unsigned                         updating:1;$/;"	m	struct:ngx_http_cache_s
@@ -11313,8 +11314,9 @@ url	src/core/ngx_inet.h	/^    ngx_str_t                 url;$/;"	m	struct:__anon
 url	src/http/modules/ngx_http_proxy_module.c	/^    ngx_str_t                      url;$/;"	m	struct:__anon297	file:
 url_end_char	custom_modules/nginx-secure-token-module/ngx_http_secure_token_processor_base.h	/^	u_char url_end_char;$/;"	m	struct:__anon30
 url_end_state	custom_modules/nginx-secure-token-module/ngx_http_secure_token_processor_base.h	/^	int url_end_state;$/;"	m	struct:__anon30
-url_parser_url	otu_test/url_parser.h	/^typedef struct url_parser_url $/;"	s
-url_parser_url_t	otu_test/url_parser.h	/^} url_parser_url_t;$/;"	t	typeref:struct:url_parser_url
+url_parser_url	script_tool/otu_test/url_parser.h	/^typedef struct url_parser_url $/;"	s
+url_parser_url_t	script_tool/otu_test/url_parser.h	/^} url_parser_url_t;$/;"	t	typeref:struct:url_parser_url
+usage	script_tool/api/ngxapi	/^function usage() {$/;"	f
 use	src/event/ngx_event.h	/^    ngx_uint_t    use;$/;"	m	struct:__anon370
 use_event	src/core/ngx_open_file_cache.h	/^    unsigned                 use_event:1;$/;"	m	struct:ngx_cached_open_file_s
 use_temp_path	src/http/ngx_http_cache.h	/^    ngx_uint_t                       use_temp_path;$/;"	m	struct:ngx_http_file_cache_s

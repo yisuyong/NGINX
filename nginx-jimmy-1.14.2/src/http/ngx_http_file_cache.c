@@ -968,6 +968,7 @@ ngx_http_file_cache_name(ngx_http_request_t *r, ngx_path_t *path)
     ngx_memcpy(c->file.name.data, path->name.data, path->name.len);
 
     p = c->file.name.data + path->name.len + 1 + path->len;
+
     p = ngx_hex_dump(p, c->key, NGX_HTTP_CACHE_KEY_LEN);
     *p = '\0';
 
